@@ -6,7 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moeidbannerlibrary.banner.BaseBannerAdapter
+import com.example.shop.adapter.HomeProductsAdapter
+import com.example.shop.data.LocalData
 import com.example.shop.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -36,6 +39,11 @@ class HomeFragment : Fragment() {
 
     private fun initViews() {
         binding.Banner.setAdapter(bannerAdapter)
+
+        binding.herbalMedicineRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,true)
+            adapter=HomeProductsAdapter(requireContext(),LocalData.herbal_medicine_Products())
+        }
     }
 
 }
