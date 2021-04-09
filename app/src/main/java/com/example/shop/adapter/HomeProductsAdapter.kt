@@ -6,15 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.shop.InterFaces.onHomeListClickListener
 import com.example.shop.R
 import com.example.shop.databinding.HomeFragmentListTemplateBinding
 import com.example.shop.model.CategoryModel
-import javax.inject.Inject
 
 class HomeProductsAdapter(
     val context: Context,
     var list: List<CategoryModel>,
-    var homeProductsListItemAdapter: HomeProductsListItemAdapter
+    var homeProductsListItemAdapter: HomeProductsListItemAdapter,
+    var onHomeListClickListener: onHomeListClickListener
 
 ) : RecyclerView.Adapter<HomeProductsAdapter.HomeProductsHolder>() {
 
@@ -37,11 +38,17 @@ class HomeProductsAdapter(
 
         fun bindData(data: CategoryModel) {
             binding.txtCategory.text = data.category_name
-           binding.listRecyclerView.apply {
+            binding.listRecyclerView.apply {
                layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,true)
                adapter = homeProductsListItemAdapter
-           }
+            }
+            itemView.setOnClickListener { onHomeListClickListener.onHomeListClick(data) }
+
+
         }
+
     }
+
+
 
 }
