@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moeidbannerlibrary.banner.BaseBannerAdapter
 import com.example.shop.adapter.HomeProductsAdapter
+import com.example.shop.adapter.HomeProductsListItemAdapter
 import com.example.shop.data.LocalData
 import com.example.shop.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,6 +22,9 @@ class HomeFragment : Fragment() {
 
     @Inject
     lateinit var bannerAdapter: BaseBannerAdapter
+
+    @Inject
+    lateinit var productsListItemAdapter: HomeProductsListItemAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,9 +44,9 @@ class HomeFragment : Fragment() {
     private fun initViews() {
         binding.Banner.setAdapter(bannerAdapter)
 
-        binding.herbalMedicineRecyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,true)
-            adapter=HomeProductsAdapter(requireContext(),LocalData.herbal_medicine_Products())
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+            adapter=HomeProductsAdapter(requireContext(),LocalData.categoryItems(),productsListItemAdapter)
         }
     }
 

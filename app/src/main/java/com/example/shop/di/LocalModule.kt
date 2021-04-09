@@ -2,7 +2,7 @@ package com.example.shop.di
 
 import android.content.Context
 import com.example.moeidbannerlibrary.banner.BaseBannerAdapter
-import com.example.shop.adapter.HomeProductsAdapter
+import com.example.shop.adapter.HomeProductsListItemAdapter
 import com.example.shop.data.LocalData
 import dagger.Module
 import dagger.Provides
@@ -20,5 +20,8 @@ object LocalModule {
     fun provideHomeSliderAdapter(@ActivityContext context:Context):BaseBannerAdapter =
         BaseBannerAdapter(context,LocalData.homeSliderItems())
 
-
+    @Provides
+    @FragmentScoped
+    fun provideHomeListItems(@ActivityContext context:Context):HomeProductsListItemAdapter =
+        HomeProductsListItemAdapter(context,LocalData.productsItems())
 }

@@ -4,24 +4,26 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shop.R
 import com.example.shop.databinding.HomeFragmentListTemplateBinding
-import com.example.shop.model.ProductModel
-import com.squareup.picasso.Picasso
+import com.example.shop.model.CategoryModel
+import javax.inject.Inject
 
 class HomeProductsAdapter(
     val context: Context,
-    var list: List<ProductModel>
+    var list: List<CategoryModel>,
+    var homeProductsListItemAdapter: HomeProductsListItemAdapter
 
-) : RecyclerView.Adapter<HomeProductsAdapter.ViewHolder>() {
-
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(LayoutInflater.from(context).inflate(R.layout.home_fragment_list_template,parent,false))
+) : RecyclerView.Adapter<HomeProductsAdapter.HomeProductsHolder>() {
 
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeProductsHolder =
+        HomeProductsHolder(LayoutInflater.from(context).inflate(R.layout.home_fragment_list_template,parent,false))
+
+
+    override fun onBindViewHolder(holder: HomeProductsHolder, position: Int) {
        holder.bindData(list[position])
     }
 
@@ -30,12 +32,15 @@ class HomeProductsAdapter(
     }
 
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class HomeProductsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = HomeFragmentListTemplateBinding.bind(itemView)
 
-        fun bindData(data: ProductModel) {
-            binding.txtProductName.text = data.name
-           Picasso.get().load(data.image).into(binding.imgProduct)
+        fun bindData(data: CategoryModel) {
+            binding.txtCategory.text = data.category_name
+           binding.listRecyclerView.apply {
+               layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,true)
+               adapter = homeProductsListItemAdapter
+           }
         }
     }
 
