@@ -1,9 +1,10 @@
 package com.example.shop.model
 
-data class ProductModel(
+data class ShopCartModel(
     var name: String,
     var image: String,
     var price: String,
-    var desc: String,
-    var category: String
+    var category: String,
+    var count: Int,
+    var reminder:Int
 )

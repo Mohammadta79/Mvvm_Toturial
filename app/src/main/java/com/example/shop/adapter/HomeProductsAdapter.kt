@@ -14,7 +14,7 @@ import com.example.shop.model.CategoryModel
 class HomeProductsAdapter(
     val context: Context,
     var list: List<CategoryModel>,
-    var homeProductsListItemAdapter: HomeProductsListItemAdapter,
+    var productsListItemAdapter: ProductsListItemAdapter,
     var onHomeListClickListener: onHomeListClickListener
 
 ) : RecyclerView.Adapter<HomeProductsAdapter.HomeProductsHolder>() {
@@ -40,7 +40,7 @@ class HomeProductsAdapter(
             binding.txtCategory.text = data.category_name
             binding.listRecyclerView.apply {
                layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,true)
-               adapter = homeProductsListItemAdapter
+               adapter = productsListItemAdapter
             }
             itemView.setOnClickListener { onHomeListClickListener.onHomeListClick(data) }
 

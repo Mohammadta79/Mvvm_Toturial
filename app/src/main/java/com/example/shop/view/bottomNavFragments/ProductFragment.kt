@@ -2,18 +2,18 @@ package com.example.shop.view.bottomNavFragments
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moeidbannerlibrary.banner.BaseBannerAdapter
 import com.example.shop.InterFaces.onHomeListClickListener
-import com.example.shop.InterFaces.onHomeListItemClickListener
+import com.example.shop.InterFaces.onProductListItemClickListener
+import com.example.shop.R
 import com.example.shop.adapter.HomeProductsAdapter
-import com.example.shop.adapter.HomeProductsListItemAdapter
+import com.example.shop.adapter.ProductsListItemAdapter
 import com.example.shop.data.LocalData
 import com.example.shop.databinding.FragmentHomeBinding
 import com.example.shop.model.CategoryModel
@@ -22,13 +22,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(),onHomeListItemClickListener,onHomeListClickListener {
+class ProductFragment : Fragment(),onProductListItemClickListener,onHomeListClickListener {
 
     private lateinit var binding: FragmentHomeBinding
 
     @Inject
     lateinit var bannerAdapter: BaseBannerAdapter
-    lateinit var productsListItemAdapter: HomeProductsListItemAdapter
+    lateinit var productsListItemAdapter: ProductsListItemAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,18 +50,24 @@ class HomeFragment : Fragment(),onHomeListItemClickListener,onHomeListClickListe
         binding.Banner.setAdapter(bannerAdapter)
 
         //init Adapters
-        productsListItemAdapter = HomeProductsListItemAdapter(requireContext(),LocalData.productsItems(),this)
+        productsListItemAdapter = ProductsListItemAdapter(requireContext(),LocalData.productsItems(),this)
         binding.homeRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
-            adapter= HomeProductsAdapter(requireContext(),LocalData.categoryItems(),productsListItemAdapter,this@HomeFragment)
+            adapter= HomeProductsAdapter(requireContext(),LocalData.categoryItems(),productsListItemAdapter,this@ProductFragment)
         }
 
 
     }
 
     override fun onHomeListItemClick(productModel: ProductModel) {
-      //TODO : go to deatils fragments
+        var  bundle = Bundle()
+        bundle.putString("name",productModel.name)
+        bundle.putString("category",productModel.category)
+        bundle.putString("price",productModel.price)
+        bundle.putString("desc",productModel.desc)
+      findNavController().navigate(R.id.action_homeFragment_to_detailsProductFragment,bundle)
     }
+
 
     override fun onHomeListClick(categoryModel: CategoryModel) {
         //TODO : Show all list of this category

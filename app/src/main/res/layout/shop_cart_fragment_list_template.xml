@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginTop="4dp"
+    android:elevation="4dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="182dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="8dp"
+            android:layout_margin="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/img_product_cart"
+                android:layout_width="102dp"
+                android:layout_height="112dp"
+                android:background="@color/white"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher_round"></androidx.appcompat.widget.AppCompatImageButton>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/txt_product_name_cart"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/vazir"
+            android:gravity="center"
+            android:lines="2"
+            android:text="آویشن محلی"
+            android:textColor="@color/text_color"
+            android:textSize="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintStart_toEndOf="@+id/cardView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_cart_price"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/vazir_bold"
+            android:gravity="center"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:text="29,000"
+            android:textColor="@color/text_color"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"></TextView>
+
+        <TextView
+            android:id="@+id/txt_category_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintVertical_bias="0.1"
+            android:text="معجون طب سنتی"
+            android:fontFamily="@font/vazir"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/txt_product_name_cart"
+            app:layout_constraintStart_toStartOf="@+id/txt_product_name_cart"
+            app:layout_constraintTop_toBottomOf="@+id/txt_product_name_cart"></TextView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            android:layout_margin="8dp"
+            app:cardElevation="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+
+            <LinearLayout
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+
+                >
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/img_mines_cart"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_delete"></androidx.appcompat.widget.AppCompatImageView>
+
+                <TextView
+                    android:id="@+id/txt_num_of_cart"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/vazir"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textColor="@color/color_primary"
+                    android:textSize="18dp"
+                    android:textStyle="bold"></TextView>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/img_add_cart"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_add"></androidx.appcompat.widget.AppCompatImageView>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

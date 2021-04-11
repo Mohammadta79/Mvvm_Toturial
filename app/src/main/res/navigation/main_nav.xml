@@ -7,9 +7,15 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.shop.view.bottomNavFragments.HomeFragment"
+        android:name="com.example.shop.view.bottomNavFragments.ProductFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_detailsProductFragment"
+            app:destination="@id/detailsProductFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+    </fragment>
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="com.example.shop.view.bottomNavFragments.FavoriteFragment"
@@ -25,4 +31,9 @@
         android:name="com.example.shop.view.bottomNavFragments.UserFragment"
         android:label="fragment_user"
         tools:layout="@layout/fragment_user" />
+    <fragment
+        android:id="@+id/detailsProductFragment"
+        android:name="com.example.shop.view.DetailsProductFragment"
+        android:label="fragment_details_product"
+        tools:layout="@layout/fragment_details_product" />
 </navigation>

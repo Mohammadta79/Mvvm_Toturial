@@ -2,8 +2,6 @@ package com.example.shop.di
 
 import android.content.Context
 import com.example.moeidbannerlibrary.banner.BaseBannerAdapter
-import com.example.shop.InterFaces.onHomeListItemClickListener
-import com.example.shop.adapter.HomeProductsListItemAdapter
 import com.example.shop.data.LocalData
 import dagger.Module
 import dagger.Provides

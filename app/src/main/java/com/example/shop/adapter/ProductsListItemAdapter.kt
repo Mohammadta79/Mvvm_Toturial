@@ -5,18 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.shop.InterFaces.onHomeListItemClickListener
+import com.example.shop.InterFaces.onProductListItemClickListener
 import com.example.shop.R
 import com.example.shop.databinding.HomeFragmentListItemTemplateBinding
 import com.example.shop.model.ProductModel
 import com.squareup.picasso.Picasso
 
-class HomeProductsListItemAdapter(
+class ProductsListItemAdapter(
     val context: Context,
     val list: List<ProductModel>,
-    val listener:onHomeListItemClickListener
+    val listener:onProductListItemClickListener
 ):
-    RecyclerView.Adapter<HomeProductsListItemAdapter.HomeProductsListHolder>() {
+    RecyclerView.Adapter<ProductsListItemAdapter.HomeProductsListHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeProductsListHolder =
@@ -34,8 +34,8 @@ class HomeProductsListItemAdapter(
         private val binding = HomeFragmentListItemTemplateBinding.bind(itemView)
 
         fun bindData(data: ProductModel){
-            binding.txtProductName.text = data.name
-            Picasso.get().load(data.image).into(binding.imgProduct)
+            binding.txtProductNameHome.text = data.name
+            Picasso.get().load(data.image).into(binding.imgProductHome)
             itemView.setOnClickListener { listener.onHomeListItemClick(data) }
         }
     }
