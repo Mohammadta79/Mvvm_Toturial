@@ -8,12 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.shop.InterFaces.onProductListItemClickListener
 import com.example.shop.R
 import com.example.shop.databinding.HomeFragmentListItemTemplateBinding
+import com.example.shop.model.CategoryModel
 import com.example.shop.model.ProductModel
 import com.squareup.picasso.Picasso
 
 class ProductsListItemAdapter(
     val context: Context,
-    val list: List<ProductModel>,
+    val list: ArrayList<ProductModel>,
     val listener:onProductListItemClickListener
 ):
     RecyclerView.Adapter<ProductsListItemAdapter.HomeProductsListHolder>() {
@@ -36,7 +37,7 @@ class ProductsListItemAdapter(
         fun bindData(data: ProductModel){
             binding.txtProductNameHome.text = data.name
             Picasso.get().load(data.image).into(binding.imgProductHome)
-            itemView.setOnClickListener { listener.onHomeListItemClick(data) }
+            itemView.setOnClickListener { listener.onProductListItemClick(data) }
         }
     }
 

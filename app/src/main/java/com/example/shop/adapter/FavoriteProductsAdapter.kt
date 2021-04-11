@@ -10,7 +10,6 @@ import com.example.shop.R
 import com.example.shop.databinding.FavoriteFragmentListTemplateBinding
 import com.example.shop.model.ProductModel
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.delay
 
 class FavoriteProductsAdapter(
     val context: Context,
@@ -50,7 +49,7 @@ class FavoriteProductsAdapter(
             binding.txtProductNameFavorite.text = data.name
             binding.txtProductPriceFavorite.text = data.price
 
-            itemView.setOnClickListener{listener.onHomeListItemClick(data)}
+            itemView.setOnClickListener{listener.onProductListItemClick(data)}
             binding.imgDeleteFavorite.setOnClickListener { deleteItem(adapterPosition) }
         }
 

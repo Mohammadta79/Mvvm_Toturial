@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.DetailsProductFragment">
+    tools:context=".view.ProductDetailsFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -22,7 +22,22 @@
             app:collapsedTitleGravity="right"
             app:contentScrim="@color/color_primary"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-            app:title="محمدمهدی طاهری">
+          >
+            <ImageView
+                android:id="@+id/img_product"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+              ></ImageView>
+            <ImageView
+                android:id="@+id/img_fav"
+                android:src="@drawable/ic_disslike"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="bottom"></ImageView>
 
 
             <androidx.appcompat.widget.Toolbar
@@ -142,6 +157,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="200dp"
+        android:id="@+id/btn_add_to_cart"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:background="@drawable/shape_btn_add_to_cart"
@@ -154,6 +170,58 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_price"></androidx.appcompat.widget.AppCompatButton>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_handel_cart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        android:visibility="invisible"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_price"
+       >
+
+
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            >
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/img_mines_cart"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:src="@drawable/ic_delete"></androidx.appcompat.widget.AppCompatImageView>
+
+            <TextView
+                android:id="@+id/txt_num_of_cart"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/vazir"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="@color/color_primary"
+                android:textSize="18dp"
+                android:textStyle="bold"></TextView>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/img_add_cart"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:src="@drawable/ic_add"></androidx.appcompat.widget.AppCompatImageView>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.Auth.RegisterFragment">
+
+
+    <EditText
+
+        android:id="@+id/edt_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/shape_edt_login"
+        android:drawableLeft="@drawable/ic_phone"
+        android:fontFamily="@font/vazir_medium"
+        android:hint="*شماره تلفن"
+        android:inputType="phone"
+        android:gravity="center|right"
+        android:paddingLeft="12dp"
+        android:paddingRight="16dp"
+        android:textSize="14dp"></EditText>
+
+    <EditText
+
+        android:id="@+id/edt_email"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@id/edt_phone_number"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/shape_edt_login"
+        android:drawableLeft="@drawable/ic_email"
+        android:fontFamily="@font/vazir_medium"
+        android:gravity="right|center"
+        android:hint="ایمیل"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="12dp"
+        android:paddingRight="16dp"
+        android:textSize="14dp"></EditText>
+
+    <EditText
+        android:id="@+id/edt_password"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@id/edt_email"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/shape_edt_login"
+        android:drawableLeft="@drawable/ic_pass"
+        android:fontFamily="@font/vazir_medium"
+        android:hint="*رمز عبور"
+        android:gravity="right|center"
+        android:inputType="textPassword"
+        android:paddingLeft="12dp"
+        android:paddingRight="16dp"
+        android:textSize="14dp"></EditText>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_register"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edt_password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/white"
+        android:text="ثبت نام"
+        android:fontFamily="@font/vazir_medium"
+        android:background="@drawable/shape_btn_login"
+        ></androidx.appcompat.widget.AppCompatButton>
+
+
+
+</RelativeLayout>

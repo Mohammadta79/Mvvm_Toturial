@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.shop.InterFaces.onShopCartItemCLickListener
 import com.example.shop.R
 import com.example.shop.databinding.ShopCartFragmentListTemplateBinding
 import com.example.shop.model.ShopCartModel
@@ -15,7 +16,8 @@ import com.squareup.picasso.Picasso
 
 class ShopCartProductsAdapter(
     val context: Context,
-    val list: ArrayList<ShopCartModel>
+    val list: ArrayList<ShopCartModel>,
+    val lisener : onShopCartItemCLickListener
 ) :
     RecyclerView.Adapter<ShopCartProductsAdapter.ShopCartProductsHolder>() {
 
@@ -64,6 +66,9 @@ class ShopCartProductsAdapter(
             binding.txtProductNameCart.text = data.name
             binding.txtNumOfCart.text = data.count.toString()
             binding.txtCategoryCart.text = data.category
+
+            itemView.setOnClickListener { lisener.onClick(data) }
+
             if (data.count == 1) {
                 binding.imgMinesCart.setImageResource(R.drawable.ic_delete)
             } else {

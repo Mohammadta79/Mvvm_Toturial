@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.shop.InterFaces.onHomeListClickListener
 import com.example.shop.R
 import com.example.shop.databinding.HomeFragmentListTemplateBinding
 import com.example.shop.model.CategoryModel
@@ -14,8 +13,7 @@ import com.example.shop.model.CategoryModel
 class HomeProductsAdapter(
     val context: Context,
     var list: List<CategoryModel>,
-    var productsListItemAdapter: ProductsListItemAdapter,
-    var onHomeListClickListener: onHomeListClickListener
+    var productsListItemAdapter: ProductsListItemAdapter
 
 ) : RecyclerView.Adapter<HomeProductsAdapter.HomeProductsHolder>() {
 
@@ -42,7 +40,7 @@ class HomeProductsAdapter(
                layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,true)
                adapter = productsListItemAdapter
             }
-            itemView.setOnClickListener { onHomeListClickListener.onHomeListClick(data) }
+
 
 
         }

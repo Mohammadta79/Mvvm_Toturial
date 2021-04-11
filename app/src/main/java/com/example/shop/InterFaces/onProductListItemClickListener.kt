@@ -5,5 +5,5 @@ import javax.inject.Inject
 
 
 interface onProductListItemClickListener {
-    fun onHomeListItemClick(productModel: ProductModel)
+    fun onProductListItemClick(productModel: ProductModel)
 }
