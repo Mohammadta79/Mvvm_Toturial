@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
@@ -20,16 +19,12 @@ import com.example.shop.adapter.ProductsListItemAdapter
 import com.example.shop.databinding.FragmentUserBinding
 import com.example.shop.model.ProductModel
 import com.example.shop.view.Auth.AuthActivity
-import com.example.shop.view.MainActivity
 import com.example.shop.viewModel.UserViewModel
 
 
 class UserFragment : Fragment(), onProductListItemClickListener, View.OnClickListener {
     private lateinit var binding: FragmentUserBinding
-
-
     private lateinit var userViewModel: UserViewModel
-    private lateinit var liveData: MutableLiveData<ArrayList<ProductModel>>
     var sharedPref: SharedPreferences? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

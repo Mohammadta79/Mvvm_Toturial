@@ -8,6 +8,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.shop.R
 import com.example.shop.databinding.ActivityMainBinding
 
+/*developed
+ by
+ Mohammadta79*/
 
 class MainActivity : AppCompatActivity() {
 
