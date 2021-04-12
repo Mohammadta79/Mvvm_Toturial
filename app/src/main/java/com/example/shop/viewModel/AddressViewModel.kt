@@ -23,7 +23,7 @@ class AddressViewModel : ViewModel() {
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private lateinit var apiService: ApiServices
 
-    fun getAddressLiveData(id:String): MutableLiveData<ArrayList<AddressModel>> {
+    fun getAddressLiveData(id: String): MutableLiveData<ArrayList<AddressModel>> {
         apiService = ApiServices()
         compositeDisposable.add(
             apiService.getAddress(id)
@@ -45,10 +45,31 @@ class AddressViewModel : ViewModel() {
         return addressLiveData
     }
 
+    private var currentAddressLiveData:MutableLiveData<AddressModel> = MutableLiveData()
+    fun getCurrentAddress(id: String): MutableLiveData<AddressModel> {
+        apiService = ApiServices()
+        compositeDisposable.add(
+            apiService.getCurrentAddress(id)
+            !!.subscribeOn(Schedulers.newThread()).
+                    observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object:DisposableSingleObserver<AddressModel?>(){
+                    override fun onSuccess(t: AddressModel?) {
+                        currentAddressLiveData.value = t as AddressModel
+                    }
 
-    private lateinit var addResponse:String
+                    override fun onError(e: Throwable?) {
+                        Log.e("CurrentAddresslError", e.toString())
+                    }
+
+                })
+        )
+        return currentAddressLiveData
+    }
+
+
+    private lateinit var addResponse: String
     fun addAddress(
-        id:String,
+        id: String,
         province: String,
         town: String,
         address: String,

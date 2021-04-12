@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shop.InterFaces.onShopCartItemCLickListener
@@ -17,7 +18,7 @@ import com.squareup.picasso.Picasso
 class ShopCartProductsAdapter(
     val context: Context,
     val list: ArrayList<ShopCartModel>,
-    val lisener : onShopCartItemCLickListener
+    val lisener: onShopCartItemCLickListener
 ) :
     RecyclerView.Adapter<ShopCartProductsAdapter.ShopCartProductsHolder>() {
 
@@ -35,25 +36,13 @@ class ShopCartProductsAdapter(
     override fun getItemCount(): Int {
         return list.size
     }
-
-    fun minesItemCount(txtCount: TextView, position: Int) {
-        if (txtCount.text.toString().toInt() != 1) {
-            var count = txtCount.text.toString().toInt()
-            count--
-            txtCount.text = count.toString()
-            //TODO:set count & reminder of products to DB
-        } else {
-            list.removeAt(position)
-            notifyItemRemoved(position)
-            //TODO:remove Item in DB
+    fun deleteItem(id:Int){
+        list.forEachIndexed{index,_ ->
+            if (list[index].id == id.toString()){
+                list.removeAt(index)
+                notifyItemRemoved(index)
+            }
         }
-    }
-
-    fun addItemCount(txtCount: TextView) {
-        var count = txtCount.text.toString().toInt()
-        count++
-        txtCount.text = count.toString()
-        //TODO:set count & reminder of products to DB
     }
 
 
@@ -66,26 +55,26 @@ class ShopCartProductsAdapter(
             binding.txtProductNameCart.text = data.name
             binding.txtNumOfCart.text = data.count.toString()
             binding.txtCategoryCart.text = data.category
-
-            itemView.setOnClickListener { lisener.onClick(data) }
-
             if (data.count == 1) {
                 binding.imgMinesCart.setImageResource(R.drawable.ic_delete)
             } else {
                 binding.imgMinesCart.setImageResource(R.drawable.ic_mines)
             }
-            binding.imgMinesCart.setOnClickListener {
-                minesItemCount(
-                    binding.txtNumOfCart,
-                    adapterPosition
-                )
-            }
+            itemView.setOnClickListener { lisener.onClick(data) }
 
             binding.imgAddCart.setOnClickListener {
-                if (data.reminder != 0) {
-                addItemCount(binding.txtNumOfCart)
-                }else{
-                    binding.imgAddCart.isEnabled = false
+                lisener.onChangeCount("add", data.id)
+            }
+            binding.imgMinesCart.setOnClickListener {
+                if (binding.imgMinesCart.drawable == AppCompatResources.getDrawable(
+                        context,
+                        R.drawable.ic_delete
+                    )
+
+                ) {
+                    lisener.onChangeCount("delete", data.id)
+                } else {
+                    lisener.onChangeCount("mines", data.id)
                 }
             }
 

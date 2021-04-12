@@ -54,14 +54,29 @@ class ShopCartViewModel : ViewModel() {
         apiService = ApiServices()
         viewModelScope.launch(Dispatchers.Main) {
             val response = apiService.addToCart(user_id, product_id, order)
-            if (response.isSuccessful && response.body() != null){
+            if (response.isSuccessful && response.body() != null) {
                 addTocartLiveData.value = response.body()
-            }else{
+            } else {
                 Log.e("addToCartViewModelError", response.errorBody().toString())
             }
         }
         return addTocartLiveData
     }
+
+    private var payResponse:MutableLiveData<String> = MutableLiveData()
+    fun pay(id: String): MutableLiveData<String> {
+        apiService = ApiServices()
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = apiService.pay(id)
+            if (response.isSuccessful && response.body() != null) {
+                payResponse.value = response.body()
+            }else{
+                Log.e("payError", response.errorBody().toString())
+            }
+        }
+        return payResponse
+    }
+
 
     override fun onCleared() {
         compositeDisposable.clear()

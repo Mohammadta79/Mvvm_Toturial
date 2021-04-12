@@ -1,4 +1,4 @@
-package com.example.shop.view.userFragmentsPage
+package com.example.shop.view.bottomNavFragments.UserAction.userFragmentsPage
 
 import android.content.Context
 import android.os.Bundle
@@ -15,8 +15,6 @@ import com.example.shop.adapter.AddressAdapter
 import com.example.shop.databinding.FragmentAddressBinding
 import com.example.shop.model.AddressModel
 import com.example.shop.viewModel.AddressViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 class AddressFragment : Fragment(), View.OnClickListener {
     private lateinit var binding: FragmentAddressBinding

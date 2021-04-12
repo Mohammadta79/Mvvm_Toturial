@@ -1,4 +1,4 @@
-package com.example.shop.view.userFragmentsPage
+package com.example.shop.view.bottomNavFragments.UserAction.userFragmentsPage
 
 import android.content.Context
 import android.os.Bundle
@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import com.example.shop.R
 import com.example.shop.databinding.FragmentAddAddressBinding
 import com.example.shop.viewModel.AddressViewModel
 

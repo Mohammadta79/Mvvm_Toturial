@@ -1,4 +1,4 @@
-package com.example.shop.view.bottomNavFragments
+package com.example.shop.view.bottomNavFragments.ProductAction
 
 
 import android.os.Bundle
@@ -15,7 +15,6 @@ import com.example.shop.InterFaces.onProductListItemClickListener
 import com.example.shop.R
 import com.example.shop.adapter.HomeProductsAdapter
 import com.example.shop.adapter.ProductsListItemAdapter
-import com.example.shop.data.LocalData
 import com.example.shop.databinding.FragmentHomeBinding
 import com.example.shop.model.CategoryModel
 import com.example.shop.model.ProductModel
@@ -31,7 +30,6 @@ class ProductFragment : Fragment(), onProductListItemClickListener {
     @Inject
     lateinit var bannerAdapter: BaseBannerAdapter
     lateinit var productViewModel: ProductViewModel
-    lateinit var productsListItemAdapter: ProductsListItemAdapter
     lateinit var mutableLiveData: MutableLiveData<ArrayList<CategoryModel>>
 
     override fun onCreateView(
@@ -56,7 +54,7 @@ class ProductFragment : Fragment(), onProductListItemClickListener {
         mutableLiveData.observe(requireActivity(), {
 
             it.forEachIndexed{
-                index, categoryModel ->
+                    index, _ ->
                 binding.homeRecyclerView.apply {
                     layoutManager =
                         LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)

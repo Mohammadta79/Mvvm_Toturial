@@ -35,6 +35,7 @@ class ProductsListItemAdapter(
         private val binding = HomeFragmentListItemTemplateBinding.bind(itemView)
 
         fun bindData(data: ProductModel){
+            binding.txtProductPrice.text = data.price
             binding.txtProductNameHome.text = data.name
             Picasso.get().load(data.image).into(binding.imgProductHome)
             itemView.setOnClickListener { listener.onProductListItemClick(data) }

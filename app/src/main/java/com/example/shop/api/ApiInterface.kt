@@ -22,6 +22,10 @@ interface ApiInterface {
     @GET("getAddress.php")
     fun getAddress(@Field("id") id: String): Single<ArrayList<AddressModel>>
 
+
+    @GET("getCurrentAddress.php")
+    fun getCurrentAddress(@Field("id") id: String): Single<AddressModel>
+
     @FormUrlEncoded
     @POST("login.php")
     suspend fun login(
@@ -76,4 +80,10 @@ interface ApiInterface {
         @Field("user_id") user_id: String,
         @Field("order") order: String
     ): Response<AddToCartResponseModel>
+
+    @FormUrlEncoded
+    @POST("pay.php")
+    suspend fun pay(
+        @Field("user_id") user_id: String,
+    ): Response<String>
 }

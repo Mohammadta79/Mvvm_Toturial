@@ -15,7 +15,7 @@ class AddressAdapter(
 ) : RecyclerView.Adapter<AddressAdapter.AddressViewHolder>() {
 
     inner class AddressViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val binding = AddressFragmentListTemplateBinding.bind(itemView)
+        val binding = AddressFragmentListTemplateBinding.bind(itemView)
 
         fun bindData(data: AddressModel) {
             binding.txtAddress.text = data.address
@@ -25,7 +25,10 @@ class AddressAdapter(
             binding.txtReciver.text = data.reciver
 
 
+
         }
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddressViewHolder =
@@ -36,6 +39,7 @@ class AddressAdapter(
 
     override fun onBindViewHolder(holder: AddressViewHolder, position: Int) {
         holder.bindData(list[position])
+
     }
 
     override fun getItemCount(): Int {

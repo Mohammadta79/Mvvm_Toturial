@@ -1,4 +1,4 @@
-package com.example.shop.view
+package com.example.shop.view.bottomNavFragments.ProductAction
 
 import android.content.Context
 import android.os.Bundle
@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.example.shop.R
 import com.example.shop.databinding.FragmentDetailsProductBinding
 import com.example.shop.viewModel.ProductViewModel

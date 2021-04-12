@@ -33,6 +33,10 @@ class ApiServices() {
     fun getAddress(id: String): Single<ArrayList<AddressModel>> {
         return apiInterface!!.getAddress(id)
     }
+    fun getCurrentAddress(id: String): Single<AddressModel> {
+        return apiInterface!!.getCurrentAddress(id)
+    }
+
 
     suspend fun login(mobile: String, password: String): Response<AuthResponseModel> {
         return apiInterface!!.login(mobile, password)
@@ -86,10 +90,13 @@ class ApiServices() {
     }
 
     suspend fun addToCart(
-        user_id:String,
+        user_id: String,
         product_id: String,
         order: String
     ): Response<AddToCartResponseModel> {
-        return apiInterface!!.addToCart(product_id,user_id,order)
+        return apiInterface!!.addToCart(product_id, user_id, order)
+    }
+    suspend fun pay(id: String):Response<String>{
+        return apiInterface!!.pay(id)
     }
 }

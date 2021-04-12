@@ -1,12 +1,14 @@
-package com.example.shop.view.bottomNavFragments
+package com.example.shop.view.bottomNavFragments.UserAction
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -15,9 +17,9 @@ import com.example.moeidbannerlibrary.banner.BaseBannerAdapter
 import com.example.shop.InterFaces.onProductListItemClickListener
 import com.example.shop.R
 import com.example.shop.adapter.ProductsListItemAdapter
-import com.example.shop.data.LocalData
 import com.example.shop.databinding.FragmentUserBinding
 import com.example.shop.model.ProductModel
+import com.example.shop.view.MainActivity
 import com.example.shop.viewModel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -30,6 +32,7 @@ class UserFragment : Fragment(), onProductListItemClickListener, View.OnClickLis
     lateinit var bannerAdapter: BaseBannerAdapter
     private lateinit var userViewModel: UserViewModel
     private lateinit var liveData: MutableLiveData<ArrayList<ProductModel>>
+    var sharedPref: SharedPreferences? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,11 +50,23 @@ class UserFragment : Fragment(), onProductListItemClickListener, View.OnClickLis
     }
 
     fun initView() {
+        sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
+        when(sharedPref!!.getString("status", "logout")){
+            "login" ->{
+                binding.orginalLayout.visibility = View.VISIBLE
+                binding.registerLayout.visibility = View.GONE
+            }
+            "logout" ->{
+                binding.orginalLayout.visibility = View.GONE
+                binding.registerLayout.visibility = View.VISIBLE
+            }
+        }
+
         //init banner
         binding.Banner.setAdapter(bannerAdapter)
 
         userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
-        val sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
+
         sharedPref!!.getString("id", null)?.let {
             liveData = userViewModel.getMyProductLiveData(it)
         }
@@ -94,6 +109,10 @@ class UserFragment : Fragment(), onProductListItemClickListener, View.OnClickLis
             binding.txtAddress.id -> {
                 findNavController().navigate(R.id.action_userFragment_to_addressFragment)
             }
+            binding.txtAuth.id -> {
+                requireActivity().startActivity(Intent(requireActivity(), MainActivity::class.java))
+                requireActivity().finish()
+            }
         }
 
     }
@@ -101,5 +120,6 @@ class UserFragment : Fragment(), onProductListItemClickListener, View.OnClickLis
     fun selectedViews() {
         binding.txtUserInformation.setOnClickListener(this)
         binding.txtAddress.setOnClickListener(this)
+        binding.txtAuth.setOnClickListener(this)
     }
 }
