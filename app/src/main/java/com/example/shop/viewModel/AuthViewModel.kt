@@ -6,18 +6,18 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shop.api.ApiServices
+import com.example.shop.repo.MainRepo
 import com.example.shop.model.AuthResponseModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AuthViewModel : ViewModel() {
     var authLoginData: MutableLiveData<AuthResponseModel> = MutableLiveData()
-    private lateinit var apiService: ApiServices
+    private lateinit var apiService: MainRepo
 
     fun login(mobile: String, password: String): MutableLiveData<AuthResponseModel> {
 
-        apiService = ApiServices()
+        apiService = MainRepo()
         viewModelScope.launch(Dispatchers.IO) {
             val response = apiService.login(mobile, password)
             if (response.isSuccessful && response.body() != null) {
@@ -37,7 +37,7 @@ class AuthViewModel : ViewModel() {
         email: String
     ): MutableLiveData<AuthResponseModel> {
 
-        apiService = ApiServices()
+        apiService = MainRepo()
         viewModelScope.launch(Dispatchers.IO) {
             val response = apiService.register(mobile, password, email)
             if (response.isSuccessful && response.body() != null) {

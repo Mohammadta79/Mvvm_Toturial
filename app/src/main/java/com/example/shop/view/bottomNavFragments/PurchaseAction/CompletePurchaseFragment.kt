@@ -9,15 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.shop.InterFaces.onProductListItemClickListener
 import com.example.shop.InterFaces.onShopCartItemCLickListener
 import com.example.shop.R
 import com.example.shop.adapter.CompletePurchaseProductsAdapter
-import com.example.shop.adapter.ProductsListItemAdapter
 import com.example.shop.databinding.FragmentCompletePurchaseBinding
-import com.example.shop.model.ProductModel
 import com.example.shop.model.ShopCartModel
 import com.example.shop.viewModel.AddressViewModel
 import com.example.shop.viewModel.ShopCartViewModel
@@ -50,8 +48,8 @@ class CompletePurchaseFragment : Fragment(), onShopCartItemCLickListener, View.O
         shopCartViewModel = ViewModelProvider(requireActivity()).get(ShopCartViewModel::class.java)
         addressViewModel = ViewModelProvider(requireActivity()).get(AddressViewModel::class.java)
         sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
-        sharedPref!!.getString("id", null)?.let {
-            shopCartViewModel.getShopCartLiveData(it).observe(requireActivity(), {
+        sharedPref!!.getString("id", null)?.let { it ->
+            shopCartViewModel.getShopCartLiveData(it).observe(requireActivity()) {
                 binding.completePurchaseRecycler.apply {
                     layoutManager =
                         LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, true)
@@ -65,15 +63,15 @@ class CompletePurchaseFragment : Fragment(), onShopCartItemCLickListener, View.O
                     total_price += it[index].price.toInt()
                 }
                 binding.txtFinalPrice.text = total_price.toString()
-            })
-            addressViewModel.getCurrentAddress(it).observe(requireActivity(), {
+            }
+            addressViewModel.getCurrentAddress(it).observe(requireActivity()) {
                 binding.txtAddress.text = it.address
                 binding.txtCity.text = it.city
                 binding.txtPostalCade.text = it.postalCode
                 binding.txtReciver.text = it.reciver
                 binding.txtPhoneNumber.text = it.mobile
 
-            })
+            }
         }
 
     }
@@ -110,7 +108,7 @@ class CompletePurchaseFragment : Fragment(), onShopCartItemCLickListener, View.O
 
             binding.btnPay.id -> {
                 sharedPref!!.getString("id", null)?.let {
-                    shopCartViewModel.pay(it).observe(requireActivity(), {
+                    shopCartViewModel.pay(it).observe(requireActivity()) {
                         if (it == "ok") {
                             Toast.makeText(
                                 requireContext(),
@@ -121,7 +119,7 @@ class CompletePurchaseFragment : Fragment(), onShopCartItemCLickListener, View.O
                             Toast.makeText(requireContext(), "خطایی رخ داده است", Toast.LENGTH_LONG)
                                 .show()
                         }
-                    })
+                    }
                 }
             }
         }

@@ -11,20 +11,26 @@ interface ApiInterface {
     fun getAllProducts(): Single<ArrayList<CategoryModel>>
 
     @GET("getFavoriteProducts.php")
-    fun getFavoriteProducts(@Field("id") id: String): Single<ArrayList<ProductModel>>
+    fun getFavoriteProducts(@Field("id") id: String?): Single<ArrayList<ProductModel>>
 
     @GET("getShopCart.php")
-    fun getShopCarts(@Field("id") id: String): Single<ArrayList<ShopCartModel>>
+    fun getShopCarts(@Field("id") id: String?): Single<ArrayList<ShopCartModel>>
 
     @GET("getMyProducts.php")
-    fun getMyProducts(@Field("id") id: String): Single<ArrayList<ProductModel>>
+    fun getMyProducts(@Field("id") id: String?): Single<ArrayList<ProductModel>>
 
     @GET("getAddress.php")
-    fun getAddress(@Field("id") id: String): Single<ArrayList<AddressModel>>
+    fun getAddress(@Field("id") id: String?): Single<ArrayList<AddressModel>>
 
 
     @GET("getCurrentAddress.php")
     fun getCurrentAddress(@Field("id") id: String): Single<AddressModel>
+
+    @GET("getProductBanner.php")
+    fun getProductBanner(): Single<ArrayList<String>>
+
+    @GET("getUserBanner.php")
+    fun getUserBanner(): Single<ArrayList<String>>
 
     @FormUrlEncoded
     @POST("login.php")
@@ -63,7 +69,7 @@ interface ApiInterface {
         @Field("mobile") mobile: String,
         @Field("nationalID") nationalID: String,
         @Field("email") email: String,
-        @Field("phone") phone: String,
+        @Field("phone") phone: String
     ): Response<String>
 
     @FormUrlEncoded
@@ -84,6 +90,6 @@ interface ApiInterface {
     @FormUrlEncoded
     @POST("pay.php")
     suspend fun pay(
-        @Field("user_id") user_id: String,
+        @Field("user_id") user_id: String
     ): Response<String>
 }

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shop.R
@@ -19,7 +20,7 @@ import com.example.shop.viewModel.AddressViewModel
 class AddressFragment : Fragment(), View.OnClickListener {
     private lateinit var binding: FragmentAddressBinding
     lateinit var addressViewModel: AddressViewModel
-    lateinit var liveData: MutableLiveData<ArrayList<AddressModel>>
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,15 +50,18 @@ class AddressFragment : Fragment(), View.OnClickListener {
         addressViewModel = ViewModelProvider(requireActivity()).get(AddressViewModel::class.java)
         val sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
         sharedPref!!.getString("id", null)?.let {
-            liveData = addressViewModel.getAddressLiveData(it)
+            addressViewModel.getAddressLiveData(sharedPref!!.getString("id", null))
+                .observe(requireActivity()) {
+                    binding.addressRecycler.apply {
+                        adapter = AddressAdapter(requireContext(), it)
+                        layoutManager = LinearLayoutManager(
+                            requireContext(),
+                            LinearLayoutManager.VERTICAL,
+                            false
+                        )
+                    }
+                }
         }
-        liveData.observe(requireActivity(), {
-            binding.addressRecycler.apply {
-                adapter = AddressAdapter(requireContext(), it)
-                layoutManager =
-                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-            }
-        })
 
 
     }

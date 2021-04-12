@@ -4,8 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shop.api.ApiServices
-import com.example.shop.model.CategoryModel
+import com.example.shop.repo.MainRepo
 import com.example.shop.model.ProductModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -19,10 +18,10 @@ class UserViewModel : ViewModel() {
 
     private var mutableLiveData: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private lateinit var apiService: ApiServices
+    private lateinit var apiService: MainRepo
 
-    fun getMyProductLiveData(id: String): MutableLiveData<ArrayList<ProductModel>> {
-        apiService = ApiServices()
+    fun getMyProductLiveData(id: String?): MutableLiveData<ArrayList<ProductModel>> {
+        apiService = MainRepo()
         compositeDisposable.add(
             apiService.getMyProducts(id)
             !!.subscribeOn(Schedulers.newThread())
@@ -52,7 +51,7 @@ class UserViewModel : ViewModel() {
         email: String,
         phone: String
     ): String {
-        apiService = ApiServices()
+        apiService = MainRepo()
         viewModelScope.launch(Dispatchers.IO) {
             val response = apiService.addInfo(id, name, mobile, nationalID, email, phone)
             if (response.isSuccessful && response.body() != null){
@@ -64,6 +63,29 @@ class UserViewModel : ViewModel() {
         return addInfoResponse
     }
 
+
+    private var bannerItemList: MutableLiveData<ArrayList<String>> = MutableLiveData()
+    fun getBannerItem(): MutableLiveData<ArrayList<String>> {
+        apiService = MainRepo()
+        compositeDisposable.add(
+            apiService.getUserBannerItem()
+            !!.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<List<String?>?>() {
+
+                    override fun onSuccess(t: List<String?>?) {
+                        bannerItemList.value = t as ArrayList<String>?
+                    }
+
+                    override fun onError(e: @io.reactivex.rxjava3.annotations.NonNull Throwable?) {
+                        Log.d("getBannerError", e.toString())
+                    }
+
+
+                })
+        )
+        return bannerItemList
+    }
     override fun onCleared() {
         compositeDisposable.clear()
         super.onCleared()

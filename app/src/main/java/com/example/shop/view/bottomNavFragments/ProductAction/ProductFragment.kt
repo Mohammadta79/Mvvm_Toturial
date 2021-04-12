@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moeidbannerlibrary.banner.BaseBannerAdapter
@@ -19,18 +20,14 @@ import com.example.shop.databinding.FragmentHomeBinding
 import com.example.shop.model.CategoryModel
 import com.example.shop.model.ProductModel
 import com.example.shop.viewModel.ProductViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class ProductFragment : Fragment(), onProductListItemClickListener {
 
     private lateinit var binding: FragmentHomeBinding
 
-    @Inject
-    lateinit var bannerAdapter: BaseBannerAdapter
     lateinit var productViewModel: ProductViewModel
     lateinit var mutableLiveData: MutableLiveData<ArrayList<CategoryModel>>
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,10 +45,9 @@ class ProductFragment : Fragment(), onProductListItemClickListener {
     }
 
     private fun initViews() {
-        binding.Banner.setAdapter(bannerAdapter)
         productViewModel = ViewModelProvider(requireActivity()).get(ProductViewModel::class.java)
         mutableLiveData = productViewModel.getProductLiveData()
-        mutableLiveData.observe(requireActivity(), {
+        mutableLiveData.observe(requireActivity()) {
 
             it.forEachIndexed{
                     index, _ ->
@@ -66,7 +62,11 @@ class ProductFragment : Fragment(), onProductListItemClickListener {
                 }
             }
 
-        })
+        }
+
+        productViewModel.getBannerItem().observe(requireActivity()) {
+            binding.Banner.setAdapter(BaseBannerAdapter(requireContext(), it))
+        }
 
 
     }

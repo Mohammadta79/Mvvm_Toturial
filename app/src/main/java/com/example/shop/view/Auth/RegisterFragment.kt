@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import com.example.shop.databinding.FragmentRegisterBinding
 import com.example.shop.view.MainActivity
 import com.example.shop.viewModel.AuthViewModel
@@ -41,7 +42,26 @@ class RegisterFragment : Fragment(), View.OnClickListener {
                         binding.edtPhoneNumber.text.toString(),
                         binding.edtPassword.text.toString(),
                         binding.edtEmail.text.toString()
-                    )
+                    ).observe(requireActivity()) {
+                        if (it != null) {
+                            val sharedPref =
+                                activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
+                            sharedPref!!.edit().apply {
+                                putString("name", it.name).apply()
+                                putString("mobile", it.mobile).apply()
+                                putString("id", it.id).apply()
+                                putString("status", "login").apply()
+                            }
+
+                            requireActivity().startActivity(
+                                Intent(
+                                    requireActivity(),
+                                    MainActivity::class.java
+                                )
+                            )
+                            requireActivity().finish()
+                        }
+                    }
                 } else {
                     Toast.makeText(
                         requireContext(),
@@ -60,17 +80,7 @@ class RegisterFragment : Fragment(), View.OnClickListener {
 
     private fun initViews() {
         authViewModel = ViewModelProvider(requireActivity()).get(AuthViewModel::class.java)
-        authViewModel.authregisterData.observe(requireActivity(), {
-            if (it != null) {
-                val sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
-                sharedPref!!.edit().putString("name", it.name)
-                sharedPref!!.edit().putString("mobile", it.mobile)
-                sharedPref!!.edit().putString("id", it.id)
-                sharedPref!!.edit().putString("status", "login")
-                requireActivity().startActivity(Intent(requireActivity(), MainActivity::class.java))
-                requireActivity().finish()
-            }
-        })
+
 
     }
 

@@ -1,12 +1,13 @@
-package com.example.shop.api
+package com.example.shop.repo
 
+import com.example.shop.api.ApiClient
+import com.example.shop.api.ApiInterface
 import com.example.shop.model.*
 import io.reactivex.rxjava3.core.Single
 import retrofit2.Response
-import retrofit2.http.Field
 
 
-class ApiServices() {
+class MainRepo {
 
     private var apiInterface: ApiInterface? = null
 
@@ -18,23 +19,32 @@ class ApiServices() {
         return apiInterface!!.getAllProducts()
     }
 
-    fun getFavoriteProducts(id: String): Single<ArrayList<ProductModel>> {
+    fun getFavoriteProducts(id: String?): Single<ArrayList<ProductModel>> {
         return apiInterface!!.getFavoriteProducts(id)
     }
 
-    fun getShopCarts(id: String): Single<ArrayList<ShopCartModel>> {
+    fun getShopCarts(id: String?): Single<ArrayList<ShopCartModel>> {
         return apiInterface!!.getShopCarts(id)
     }
 
-    fun getMyProducts(id: String): Single<ArrayList<ProductModel>> {
+    fun getMyProducts(id: String?): Single<ArrayList<ProductModel>> {
         return apiInterface!!.getMyProducts(id)
     }
 
-    fun getAddress(id: String): Single<ArrayList<AddressModel>> {
+    fun getAddress(id: String?): Single<ArrayList<AddressModel>> {
         return apiInterface!!.getAddress(id)
     }
+
     fun getCurrentAddress(id: String): Single<AddressModel> {
         return apiInterface!!.getCurrentAddress(id)
+    }
+
+    fun getProductBannerItem(): Single<ArrayList<String>> {
+        return apiInterface!!.getProductBanner()
+    }
+
+    fun getUserBannerItem(): Single<ArrayList<String>> {
+        return apiInterface!!.getUserBanner()
     }
 
 
@@ -96,7 +106,8 @@ class ApiServices() {
     ): Response<AddToCartResponseModel> {
         return apiInterface!!.addToCart(product_id, user_id, order)
     }
-    suspend fun pay(id: String):Response<String>{
+
+    suspend fun pay(id: String): Response<String> {
         return apiInterface!!.pay(id)
     }
 }

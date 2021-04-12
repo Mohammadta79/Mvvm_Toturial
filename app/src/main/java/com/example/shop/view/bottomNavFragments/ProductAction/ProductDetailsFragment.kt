@@ -1,6 +1,7 @@
 package com.example.shop.view.bottomNavFragments.ProductAction
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import com.example.shop.R
 import com.example.shop.databinding.FragmentDetailsProductBinding
 import com.example.shop.viewModel.ProductViewModel
@@ -31,6 +33,7 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
     lateinit var id: String
     lateinit var productViewModel: ProductViewModel
     lateinit var shopCartViewModel: ShopCartViewModel
+    var sharedPref: SharedPreferences? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -75,7 +78,7 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        val sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
+
         when (v!!.id) {
             binding.btnAddToCart.id -> {
                 if (startPoint.equals("shopCart")) {
@@ -97,14 +100,14 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
                         sharedPref!!.getString("id", null)
                             ?.let {
                                 val res = shopCartViewModel.addTocart(it, id, "add")
-                                res.observe(requireActivity(), {
+                                res.observe(requireActivity()) {
                                     reminder = it.reminder
                                     if (reminder == 0) {
                                         binding.imgAddCart.isEnabled = false
                                     }
                                     binding.btnAddToCart.visibility = View.INVISIBLE
                                     binding.cardHandelCart.visibility = View.VISIBLE
-                                })
+                                }
                             }
 
                     }
@@ -114,25 +117,25 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
             }
             binding.imgFav.id -> {
                 val res = productViewModel.setFav(id, favorite)
-                res.observe(requireActivity(), {
+                res.observe(requireActivity()) {
                     if (it == "like") {
                         binding.imgFav.setImageResource(R.drawable.ic_like)
                     } else {
                         binding.imgFav.setImageResource(R.drawable.ic_disslike)
                     }
-                })
+                }
             }
             binding.imgAddCart.id -> {
 
                 sharedPref!!.getString("id", null)
                     ?.let {
                         val res = shopCartViewModel.addTocart(it, id, "add")
-                        res.observe(requireActivity(), {
+                        res.observe(requireActivity()) {
                             reminder = it.reminder
                             if (reminder == 0) {
                                 binding.imgAddCart.isEnabled = false
                             }
-                        })
+                        }
                     }
             }
             binding.imgMinesCart.id -> {
@@ -145,22 +148,22 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
                             )
                         ) {
                             val res = shopCartViewModel.addTocart(it, id, "delete")
-                            res.observe(requireActivity(), {
+                            res.observe(requireActivity()) {
                                 if (it.status == "ok") {
                                     binding.btnAddToCart.visibility = View.VISIBLE
                                     binding.btnAddToCart.isEnabled = true
                                     binding.cardHandelCart.visibility = View.INVISIBLE
                                 }
-                            })
+                            }
 
                         } else {
                             val res = shopCartViewModel.addTocart(it, id, "mines")
-                            res.observe(requireActivity(), {
+                            res.observe(requireActivity()) {
                                 reminder = it.reminder
                                 if (it.count.toInt() == 0) {
                                     binding.imgMinesCart.setImageResource(R.drawable.ic_delete)
                                 }
-                            })
+                            }
                         }
 
                     }
@@ -176,6 +179,10 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
     }
 
     private fun initViews() {
+        sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
+        if (sharedPref!!.getString("id", null) == null) {
+            binding.imgFav.visibility = View.GONE
+        }
         productViewModel = ViewModelProvider(requireActivity()).get(ProductViewModel::class.java)
         shopCartViewModel = ViewModelProvider(requireActivity()).get(shopCartViewModel::class.java)
 

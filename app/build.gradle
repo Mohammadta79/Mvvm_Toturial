@@ -3,7 +3,6 @@ plugins {
     id 'kotlin-android'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -54,10 +53,6 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
-    //hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
-
     //banner layout
     implementation 'com.github.MoeidHeidari:banner:1.04'
 
@@ -68,6 +63,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
+    //RXJava & RXAndroid
     implementation "com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0"
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 

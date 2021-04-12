@@ -4,10 +4,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shop.api.ApiServices
+import com.example.shop.repo.MainRepo
 import com.example.shop.model.AddToCartResponseModel
-import com.example.shop.model.CategoryModel
-import com.example.shop.model.ProductModel
 import com.example.shop.model.ShopCartModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -21,10 +19,10 @@ class ShopCartViewModel : ViewModel() {
 
     private var mutableLiveData: MutableLiveData<ArrayList<ShopCartModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private lateinit var apiService: ApiServices
+    private lateinit var apiService: MainRepo
 
-    fun getShopCartLiveData(id: String): MutableLiveData<ArrayList<ShopCartModel>> {
-        apiService = ApiServices()
+    fun getShopCartLiveData(id: String?): MutableLiveData<ArrayList<ShopCartModel>> {
+        apiService = MainRepo()
         compositeDisposable.add(
             apiService.getShopCarts(id)
             !!.subscribeOn(Schedulers.newThread())
@@ -51,7 +49,7 @@ class ShopCartViewModel : ViewModel() {
         product_id: String,
         order: String
     ): MutableLiveData<AddToCartResponseModel> {
-        apiService = ApiServices()
+        apiService = MainRepo()
         viewModelScope.launch(Dispatchers.Main) {
             val response = apiService.addToCart(user_id, product_id, order)
             if (response.isSuccessful && response.body() != null) {
@@ -65,7 +63,7 @@ class ShopCartViewModel : ViewModel() {
 
     private var payResponse:MutableLiveData<String> = MutableLiveData()
     fun pay(id: String): MutableLiveData<String> {
-        apiService = ApiServices()
+        apiService = MainRepo()
         viewModelScope.launch(Dispatchers.IO) {
             val response = apiService.pay(id)
             if (response.isSuccessful && response.body() != null) {
@@ -76,6 +74,8 @@ class ShopCartViewModel : ViewModel() {
         }
         return payResponse
     }
+
+
 
 
     override fun onCleared() {

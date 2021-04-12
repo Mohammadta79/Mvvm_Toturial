@@ -6,14 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shop.InterFaces.onProductListItemClickListener
 import com.example.shop.R
 import com.example.shop.adapter.FavoriteProductsAdapter
-import com.example.shop.data.LocalData
 import com.example.shop.databinding.FragmentFavoriteBinding
 import com.example.shop.model.ProductModel
 import com.example.shop.viewModel.FavoriteViewModel
@@ -23,7 +24,6 @@ class FavoriteFragment : Fragment(), onProductListItemClickListener {
 
     private lateinit var binding: FragmentFavoriteBinding
     private lateinit var favoriteViewModel: FavoriteViewModel
-    private lateinit var liveData: MutableLiveData<ArrayList<ProductModel>>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,20 +40,26 @@ class FavoriteFragment : Fragment(), onProductListItemClickListener {
     private fun initViews() {
         favoriteViewModel = ViewModelProvider(requireActivity()).get(FavoriteViewModel::class.java)
         val sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
-        sharedPref!!.getString("id", null)?.let {
-        liveData = favoriteViewModel.getFavoriteLiveData(it)
+        if (sharedPref!!.getString("id", null) != null){
+            favoriteViewModel.getFavoriteLiveData(sharedPref!!.getString("id", null))
+                .observe(requireActivity()) {
+                    binding.favoriteRecyclerview.apply {
+                        layoutManager =
+                            LinearLayoutManager(
+                                requireContext(),
+                                LinearLayoutManager.VERTICAL,
+                                false
+                            )
+                        adapter = FavoriteProductsAdapter(
+                            requireContext(),
+                            it,
+                            this@FavoriteFragment
+                        )
+                    }
+                }
         }
-        liveData.observe(requireActivity(), {
-            binding.favoriteRecyclerview.apply {
-                layoutManager =
-                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-                adapter = FavoriteProductsAdapter(
-                    requireContext(),
-                    it,
-                    this@FavoriteFragment
-                )
-            }
-        })
+
+
 
     }
 

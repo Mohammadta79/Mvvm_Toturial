@@ -3,8 +3,7 @@ package com.example.shop.viewModel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.shop.api.ApiServices
-import com.example.shop.model.CategoryModel
+import com.example.shop.repo.MainRepo
 import com.example.shop.model.ProductModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -16,10 +15,10 @@ class FavoriteViewModel : ViewModel() {
 
     private var mutableLiveData: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private lateinit var apiService: ApiServices
+    private lateinit var apiService: MainRepo
 
-    fun getFavoriteLiveData(id:String): MutableLiveData<ArrayList<ProductModel>> {
-        apiService = ApiServices()
+    fun getFavoriteLiveData(id: String?): MutableLiveData<ArrayList<ProductModel>> {
+        apiService = MainRepo()
         compositeDisposable.add(
             apiService.getFavoriteProducts(id)
             !!.subscribeOn(Schedulers.newThread())

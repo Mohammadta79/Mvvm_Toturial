@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shop.InterFaces.onShopCartItemCLickListener
@@ -18,10 +19,9 @@ import com.example.shop.databinding.FragmentShopCartBinding
 import com.example.shop.model.ShopCartModel
 import com.example.shop.viewModel.ShopCartViewModel
 
-class ShopCartFragment : Fragment(), onShopCartItemCLickListener ,View.OnClickListener{
+class ShopCartFragment : Fragment(), onShopCartItemCLickListener, View.OnClickListener {
     private lateinit var binding: FragmentShopCartBinding
     private lateinit var shopCartViewModel: ShopCartViewModel
-    private lateinit var liveData: MutableLiveData<ArrayList<ShopCartModel>>
     private lateinit var shopCartList: ArrayList<ShopCartModel>
     private lateinit var adapter: ShopCartProductsAdapter
     var sharedPref: SharedPreferences? = null
@@ -43,9 +43,19 @@ class ShopCartFragment : Fragment(), onShopCartItemCLickListener ,View.OnClickLi
     fun initViews() {
         shopCartViewModel = ViewModelProvider(requireActivity()).get(ShopCartViewModel::class.java)
         sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
-        sharedPref!!.getString("id", null)?.let {
-            liveData = shopCartViewModel.getShopCartLiveData(it)
+        if (sharedPref!!.getString("id", null) != null) {
+            shopCartViewModel.getShopCartLiveData(sharedPref!!.getString("id", null))
+                .observe(requireActivity()) {
+                    shopCartList = it
+                    adapter.notifyDataSetChanged()
+                    if (it.isEmpty()) {
+                        binding.btnGoNext.visibility = View.GONE
+                    }
+                }
+        }else{
+            binding.btnGoNext.visibility = View.GONE
         }
+
         shopCartList = ArrayList()
 
         adapter = ShopCartProductsAdapter(
@@ -58,11 +68,6 @@ class ShopCartFragment : Fragment(), onShopCartItemCLickListener ,View.OnClickLi
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = adapter
         }
-        liveData.observe(requireActivity(), {
-            shopCartList = it
-            adapter.notifyDataSetChanged()
-
-        })
 
 
     }
@@ -85,7 +90,7 @@ class ShopCartFragment : Fragment(), onShopCartItemCLickListener ,View.OnClickLi
     override fun onChangeCount(order: String, id: String) {
         sharedPref!!.getString("id", null)?.let {
             val response = shopCartViewModel.addTocart(it, id, order)
-            response.observe(requireActivity(), {
+            response.observe(requireActivity()) {
                 if (order != "delete") {
                     shopCartList.forEachIndexed { index, _ ->
                         if (shopCartList[index].id == id) {
@@ -103,17 +108,18 @@ class ShopCartFragment : Fragment(), onShopCartItemCLickListener ,View.OnClickLi
 
                 }
 
-            })
+            }
         }
 
     }
 
     override fun onClick(v: View?) {
-        if (v!!.id == binding.btnGoNext.id){
+        if (v!!.id == binding.btnGoNext.id) {
             findNavController().navigate(R.id.action_shopCartFragment_to_completePurchaseFragment)
         }
     }
-    private fun selectedViews(){
+
+    private fun selectedViews() {
         binding.btnGoNext.setOnClickListener(this)
     }
 

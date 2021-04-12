@@ -4,27 +4,24 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shop.api.ApiServices
+import com.example.shop.repo.MainRepo
 import com.example.shop.model.AddressModel
-import com.example.shop.model.CategoryModel
-import com.example.shop.model.ProductModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
 
 class AddressViewModel : ViewModel() {
 
 
     private var addressLiveData: MutableLiveData<ArrayList<AddressModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private lateinit var apiService: ApiServices
+    private lateinit var apiService: MainRepo
 
-    fun getAddressLiveData(id: String): MutableLiveData<ArrayList<AddressModel>> {
-        apiService = ApiServices()
+    fun getAddressLiveData(id: String?): MutableLiveData<ArrayList<AddressModel>> {
+        apiService = MainRepo()
         compositeDisposable.add(
             apiService.getAddress(id)
             !!.subscribeOn(Schedulers.newThread())
@@ -47,7 +44,7 @@ class AddressViewModel : ViewModel() {
 
     private var currentAddressLiveData:MutableLiveData<AddressModel> = MutableLiveData()
     fun getCurrentAddress(id: String): MutableLiveData<AddressModel> {
-        apiService = ApiServices()
+        apiService = MainRepo()
         compositeDisposable.add(
             apiService.getCurrentAddress(id)
             !!.subscribeOn(Schedulers.newThread()).
@@ -79,7 +76,7 @@ class AddressViewModel : ViewModel() {
         reciverName: String,
         reciverPhone: String
     ): String {
-        apiService = ApiServices()
+        apiService = MainRepo()
         viewModelScope.launch(Dispatchers.Main) {
             val response = apiService.addAddress(
                 id,

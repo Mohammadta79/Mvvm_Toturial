@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import com.example.shop.databinding.FragmentLoginBinding
 import com.example.shop.view.MainActivity
 import com.example.shop.viewModel.AuthViewModel
@@ -41,7 +42,29 @@ class LoginFragment : Fragment(), View.OnClickListener {
                     authViewModel.login(
                         binding.edtPhoneNumber.text.toString(),
                         binding.edtPassword.text.toString()
-                    )
+                    ).observe(requireActivity()) {
+                        if (it != null) {
+                            val sharedPref =
+                                activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
+                            sharedPref!!.edit().apply {
+                                putString("name", it.name)
+                                putString("mobile", it.mobile)
+                                putString("id", it.id)
+                                putString("status", "login")
+                            }
+
+                            requireActivity().startActivity(
+                                Intent(
+                                    requireActivity(),
+                                    MainActivity::class.java
+                                )
+                            )
+                            requireActivity().finish()
+                        }
+
+
+                    }
+
                 } else {
                     Toast.makeText(
                         requireContext(),
@@ -65,19 +88,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
     private fun initViews() {
 
         authViewModel = ViewModelProvider(requireActivity()).get(AuthViewModel::class.java)
-        authViewModel.authLoginData.observe(requireActivity(), {
-            if (it != null) {
-                val sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
-                sharedPref!!.edit().putString("name", it.name)
-                sharedPref!!.edit().putString("mobile", it.mobile)
-                sharedPref!!.edit().putString("id", it.id)
-                sharedPref!!.edit().putString("status", "login")
-                requireActivity().startActivity(Intent(requireActivity(), MainActivity::class.java))
-                requireActivity().finish()
-            }
 
-
-        })
     }
 
 

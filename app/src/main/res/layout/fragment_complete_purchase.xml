@@ -163,7 +163,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:fontFamily="@font/vazir_bold"
-                android:text="1500000 تومان"
                 android:textColor="@color/text_color"
                 android:textSize="16dp"></TextView>
 
@@ -173,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/shape_btn_add_to_cart"
                 android:fontFamily="@font/vazir"
                 android:text="پرداخت"
