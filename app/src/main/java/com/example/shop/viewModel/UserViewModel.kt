@@ -6,24 +6,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shop.repo.MainRepo
 import com.example.shop.model.ProductModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserViewModel : ViewModel() {
+@HiltViewModel
+class UserViewModel @Inject constructor(var repo: MainRepo) : ViewModel() {
 
 
     private var mutableLiveData: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private lateinit var apiService: MainRepo
+
 
     fun getMyProductLiveData(id: String?): MutableLiveData<ArrayList<ProductModel>> {
-        apiService = MainRepo()
         compositeDisposable.add(
-            apiService.getMyProducts(id)
+            repo.getMyProducts(id)
             !!.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<List<ProductModel?>?>() {
@@ -51,9 +53,9 @@ class UserViewModel : ViewModel() {
         email: String,
         phone: String
     ): String {
-        apiService = MainRepo()
+
         viewModelScope.launch(Dispatchers.IO) {
-            val response = apiService.addInfo(id, name, mobile, nationalID, email, phone)
+            val response = repo.addInfo(id, name, mobile, nationalID, email, phone)
             if (response.isSuccessful && response.body() != null){
                 addInfoResponse = response.body()!!
             }else{
@@ -66,9 +68,9 @@ class UserViewModel : ViewModel() {
 
     private var bannerItemList: MutableLiveData<ArrayList<String>> = MutableLiveData()
     fun getBannerItem(): MutableLiveData<ArrayList<String>> {
-        apiService = MainRepo()
+
         compositeDisposable.add(
-            apiService.getUserBannerItem()
+            repo.getUserBannerItem()
             !!.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<List<String?>?>() {

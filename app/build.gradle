@@ -3,7 +3,9 @@ plugins {
     id 'kotlin-android'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
+
 
 android {
     compileSdkVersion 30
@@ -66,6 +68,10 @@ dependencies {
     //RXJava & RXAndroid
     implementation "com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0"
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+
+    //hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
 
 }

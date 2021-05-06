@@ -6,8 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.lifecycle.MutableLiveData
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
@@ -16,14 +15,16 @@ import com.example.shop.InterFaces.onProductListItemClickListener
 import com.example.shop.R
 import com.example.shop.adapter.FavoriteProductsAdapter
 import com.example.shop.databinding.FragmentFavoriteBinding
+import com.example.shop.model.OfferProductModel
 import com.example.shop.model.ProductModel
 import com.example.shop.viewModel.FavoriteViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class FavoriteFragment : Fragment(), onProductListItemClickListener {
 
     private lateinit var binding: FragmentFavoriteBinding
-    private lateinit var favoriteViewModel: FavoriteViewModel
+    private  val favoriteViewModel by viewModels<FavoriteViewModel>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,7 +39,7 @@ class FavoriteFragment : Fragment(), onProductListItemClickListener {
     }
 
     private fun initViews() {
-        favoriteViewModel = ViewModelProvider(requireActivity()).get(FavoriteViewModel::class.java)
+
         val sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
         if (sharedPref!!.getString("id", null) != null){
             favoriteViewModel.getFavoriteLiveData(sharedPref!!.getString("id", null))
@@ -69,7 +70,7 @@ class FavoriteFragment : Fragment(), onProductListItemClickListener {
         bundle.putString("id", productModel.id)
         bundle.putString("category", productModel.category)
         bundle.putString("price", productModel.price)
-        bundle.putString("desc", productModel.desc)
+        bundle.putString("desc", productModel.describtion)
         bundle.putString("weight", productModel.weight)
         bundle.putString("image", productModel.image)
         bundle.putString("startPoint", "favorite")
@@ -77,4 +78,9 @@ class FavoriteFragment : Fragment(), onProductListItemClickListener {
         bundle.putInt("reminder", productModel.reminder)
         findNavController().navigate(R.id.action_favoriteFragment_to_detailsProductFragment, bundle)
     }
+
+    override fun onOffersListItemClick(offerProductModel: OfferProductModel) {
+        TODO("Not yet implemented")
+    }
+
 }

@@ -5,7 +5,7 @@ data class ProductModel(
     var name: String,
     var image: String,
     var price: String,
-    var desc: String,
+    var describtion: String,
     var category: String,
     var weight: String,
     var favorite:Int,

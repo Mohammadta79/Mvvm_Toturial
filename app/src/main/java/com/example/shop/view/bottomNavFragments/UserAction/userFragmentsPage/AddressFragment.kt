@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
@@ -16,10 +17,12 @@ import com.example.shop.adapter.AddressAdapter
 import com.example.shop.databinding.FragmentAddressBinding
 import com.example.shop.model.AddressModel
 import com.example.shop.viewModel.AddressViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddressFragment : Fragment(), View.OnClickListener {
     private lateinit var binding: FragmentAddressBinding
-    lateinit var addressViewModel: AddressViewModel
+    private val addressViewModel by viewModels<AddressViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +50,6 @@ class AddressFragment : Fragment(), View.OnClickListener {
 
     fun initViews() {
 
-        addressViewModel = ViewModelProvider(requireActivity()).get(AddressViewModel::class.java)
         val sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
         sharedPref!!.getString("id", null)?.let {
             addressViewModel.getAddressLiveData(sharedPref!!.getString("id", null))

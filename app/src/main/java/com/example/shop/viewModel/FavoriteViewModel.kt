@@ -5,22 +5,25 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.shop.repo.MainRepo
 import com.example.shop.model.ProductModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class FavoriteViewModel : ViewModel() {
+@HiltViewModel
+class FavoriteViewModel @Inject constructor(var repo: MainRepo) : ViewModel() {
 
 
     private var mutableLiveData: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private lateinit var apiService: MainRepo
+
 
     fun getFavoriteLiveData(id: String?): MutableLiveData<ArrayList<ProductModel>> {
-        apiService = MainRepo()
+
         compositeDisposable.add(
-            apiService.getFavoriteProducts(id)
+            repo.getFavoriteProducts(id)
             !!.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<List<ProductModel?>?>() {

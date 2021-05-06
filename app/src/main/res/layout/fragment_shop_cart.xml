@@ -19,6 +19,7 @@
         android:fontFamily="@font/vazir"
         android:text="ادامه فرآیند خرید"
         android:textColor="@color/white"
+        android:visibility="gone"
         android:layout_margin="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"></androidx.appcompat.widget.AppCompatButton>

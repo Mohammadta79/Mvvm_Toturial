@@ -9,7 +9,7 @@
         android:id="@+id/homeFragment"
         android:name="com.example.shop.view.bottomNavFragments.ProductAction.ProductFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_product" >
         <action
             android:id="@+id/action_homeFragment_to_detailsProductFragment"
             app:destination="@id/detailsProductFragment"

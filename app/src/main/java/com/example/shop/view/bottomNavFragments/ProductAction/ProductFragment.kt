@@ -1,32 +1,38 @@
 package com.example.shop.view.bottomNavFragments.ProductAction
 
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moeidbannerlibrary.banner.BaseBannerAdapter
 import com.example.shop.InterFaces.onProductListItemClickListener
 import com.example.shop.R
-import com.example.shop.adapter.HomeProductsAdapter
-import com.example.shop.adapter.ProductsListItemAdapter
-import com.example.shop.databinding.FragmentHomeBinding
-import com.example.shop.model.CategoryModel
+import com.example.shop.adapter.CategoryListAdapter
+import com.example.shop.adapter.BestSellerProductAdapter
+import com.example.shop.adapter.OfferProductAdapter
+import com.example.shop.databinding.FragmentProductBinding
+import com.example.shop.model.OfferProductModel
 import com.example.shop.model.ProductModel
 import com.example.shop.viewModel.ProductViewModel
-
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+@AndroidEntryPoint
 class ProductFragment : Fragment(), onProductListItemClickListener {
 
-    private lateinit var binding: FragmentHomeBinding
+    private lateinit var binding: FragmentProductBinding
 
-    lateinit var productViewModel: ProductViewModel
-    lateinit var mutableLiveData: MutableLiveData<ArrayList<CategoryModel>>
+
+    private val productViewModel by viewModels<ProductViewModel>()
 
 
     override fun onCreateView(
@@ -34,7 +40,7 @@ class ProductFragment : Fragment(), onProductListItemClickListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentProductBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -45,24 +51,46 @@ class ProductFragment : Fragment(), onProductListItemClickListener {
     }
 
     private fun initViews() {
-        productViewModel = ViewModelProvider(requireActivity()).get(ProductViewModel::class.java)
-        mutableLiveData = productViewModel.getProductLiveData()
-        mutableLiveData.observe(requireActivity()) {
-
-            it.forEachIndexed{
-                    index, _ ->
-                binding.homeRecyclerView.apply {
-                    layoutManager =
-                        LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-                    adapter = HomeProductsAdapter(
-                        requireContext(),
-                        it,
-                        ProductsListItemAdapter(requireContext(), it[index].list, this@ProductFragment)
-                    )
-                }
+       // productViewModel = ViewModelProvider(requireActivity()).get(ProductViewModel::class.java)
+        //init RV category
+        productViewModel.getCategory().observe(viewLifecycleOwner) {
+            binding.categoryRV.apply {
+                layoutManager =
+                    GridLayoutManager(requireContext(), 1, GridLayoutManager.HORIZONTAL, false)
+                adapter = CategoryListAdapter(
+                    requireContext(),
+                    it
+                )
             }
-
         }
+
+        //init RV bestSellers
+        productViewModel.bestSellers().observe(viewLifecycleOwner) {
+            binding.bestSellersRV.apply {
+                layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                adapter = BestSellerProductAdapter(
+                    requireContext(),
+                    it,
+                    this@ProductFragment
+                )
+            }
+        }
+
+
+//        //init RV Offers
+        productViewModel.getOffers().observe(viewLifecycleOwner) {
+            binding.offersRV.apply {
+                layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                adapter = OfferProductAdapter(
+                    requireContext(),
+                    it,
+                    this@ProductFragment
+                )
+            }
+        }
+
 
         productViewModel.getBannerItem().observe(requireActivity()) {
             binding.Banner.setAdapter(BaseBannerAdapter(requireContext(), it))
@@ -77,7 +105,7 @@ class ProductFragment : Fragment(), onProductListItemClickListener {
         bundle.putString("id", productModel.id)
         bundle.putString("category", productModel.category)
         bundle.putString("price", productModel.price)
-        bundle.putString("desc", productModel.desc)
+        bundle.putString("desc", productModel.describtion)
         bundle.putString("weight", productModel.weight)
         bundle.putString("image", productModel.image)
         bundle.putInt("favorite", productModel.favorite)
@@ -86,6 +114,20 @@ class ProductFragment : Fragment(), onProductListItemClickListener {
         findNavController().navigate(R.id.action_homeFragment_to_detailsProductFragment, bundle)
     }
 
+    override fun onOffersListItemClick(offerProductModel: OfferProductModel) {
+        var bundle = Bundle()
+        bundle.putString("name", offerProductModel.name)
+        bundle.putString("id", offerProductModel.id)
+        bundle.putString("category", offerProductModel.category)
+        bundle.putString("price", offerProductModel.price)
+        bundle.putString("desc", offerProductModel.describtion)
+        bundle.putString("weight", offerProductModel.weight)
+        bundle.putString("image", offerProductModel.image)
+        bundle.putInt("favorite", offerProductModel.favorite)
+        bundle.putInt("reminder", offerProductModel.reminder)
+        bundle.putString("startPoint", "home")
+        findNavController().navigate(R.id.action_homeFragment_to_detailsProductFragment, bundle)
+    }
 
 
 }

@@ -7,24 +7,27 @@ import androidx.lifecycle.viewModelScope
 import com.example.shop.repo.MainRepo
 import com.example.shop.model.AddToCartResponseModel
 import com.example.shop.model.ShopCartModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ShopCartViewModel : ViewModel() {
+@HiltViewModel
+class ShopCartViewModel @Inject constructor(var repo : MainRepo) : ViewModel() {
 
 
     private var mutableLiveData: MutableLiveData<ArrayList<ShopCartModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private lateinit var apiService: MainRepo
+
 
     fun getShopCartLiveData(id: String?): MutableLiveData<ArrayList<ShopCartModel>> {
-        apiService = MainRepo()
+
         compositeDisposable.add(
-            apiService.getShopCarts(id)
+            repo.getShopCarts(id)
             !!.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<List<ShopCartModel?>?>() {
@@ -49,9 +52,9 @@ class ShopCartViewModel : ViewModel() {
         product_id: String,
         order: String
     ): MutableLiveData<AddToCartResponseModel> {
-        apiService = MainRepo()
+
         viewModelScope.launch(Dispatchers.Main) {
-            val response = apiService.addToCart(user_id, product_id, order)
+            val response = repo.addToCart(user_id, product_id, order)
             if (response.isSuccessful && response.body() != null) {
                 addTocartLiveData.value = response.body()
             } else {
@@ -63,9 +66,9 @@ class ShopCartViewModel : ViewModel() {
 
     private var payResponse:MutableLiveData<String> = MutableLiveData()
     fun pay(id: String): MutableLiveData<String> {
-        apiService = MainRepo()
+
         viewModelScope.launch(Dispatchers.IO) {
-            val response = apiService.pay(id)
+            val response = repo.pay(id)
             if (response.isSuccessful && response.body() != null) {
                 payResponse.value = response.body()
             }else{

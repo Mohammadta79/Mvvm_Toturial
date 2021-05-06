@@ -25,7 +25,6 @@ class AddressAdapter(
             binding.txtReciver.text = data.reciver
 
 
-
         }
 
 
@@ -42,8 +41,6 @@ class AddressAdapter(
 
     }
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
+    override fun getItemCount(): Int = list.size;
 
 }

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
@@ -18,10 +19,12 @@ import com.example.shop.adapter.ShopCartProductsAdapter
 import com.example.shop.databinding.FragmentShopCartBinding
 import com.example.shop.model.ShopCartModel
 import com.example.shop.viewModel.ShopCartViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ShopCartFragment : Fragment(), onShopCartItemCLickListener, View.OnClickListener {
     private lateinit var binding: FragmentShopCartBinding
-    private lateinit var shopCartViewModel: ShopCartViewModel
+    private val shopCartViewModel by viewModels<ShopCartViewModel>()
     private lateinit var shopCartList: ArrayList<ShopCartModel>
     private lateinit var adapter: ShopCartProductsAdapter
     var sharedPref: SharedPreferences? = null
@@ -41,19 +44,16 @@ class ShopCartFragment : Fragment(), onShopCartItemCLickListener, View.OnClickLi
     }
 
     fun initViews() {
-        shopCartViewModel = ViewModelProvider(requireActivity()).get(ShopCartViewModel::class.java)
         sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
         if (sharedPref!!.getString("id", null) != null) {
             shopCartViewModel.getShopCartLiveData(sharedPref!!.getString("id", null))
                 .observe(requireActivity()) {
                     shopCartList = it
                     adapter.notifyDataSetChanged()
-                    if (it.isEmpty()) {
-                        binding.btnGoNext.visibility = View.GONE
+                    if (it.isNotEmpty()) {
+                        binding.btnGoNext.visibility = View.VISIBLE
                     }
                 }
-        }else{
-            binding.btnGoNext.visibility = View.GONE
         }
 
         shopCartList = ArrayList()

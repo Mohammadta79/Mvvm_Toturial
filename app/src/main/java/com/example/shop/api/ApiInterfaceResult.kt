@@ -1,0 +1,103 @@
+package com.example.shop.api
+
+import com.example.shop.api.ApiInterface
+import com.example.shop.model.*
+import io.reactivex.rxjava3.core.Single
+import retrofit2.Response
+import javax.inject.Inject
+
+class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
+    suspend fun getCategory(): Response<ArrayList<CategoryModel>> = apiInterface.getCategory()
+
+    fun getOffers(): Single<ArrayList<OfferProductModel>> = apiInterface.getOffers()
+
+    fun bestSellers(): Single<ArrayList<ProductModel>> = apiInterface.bestSellers()
+
+    fun getFavoriteProducts(id: String?): Single<ArrayList<ProductModel>> =
+        apiInterface.getFavoriteProducts(id)
+
+
+    fun getShopCarts(id: String?): Single<ArrayList<ShopCartModel>> =
+        apiInterface.getShopCarts(id)
+
+
+    fun getMyProducts(id: String?): Single<ArrayList<ProductModel>> =
+        apiInterface.getMyProducts(id)
+
+
+    fun getAddress(id: String?): Single<ArrayList<AddressModel>> =
+        apiInterface.getAddress(id)
+
+
+    fun getCurrentAddress(id: String): Single<AddressModel> =
+        apiInterface.getCurrentAddress(id)
+
+
+    fun getProductBannerItem(): Single<ArrayList<String>> =
+        apiInterface.getProductBanner()
+
+
+    fun getUserBannerItem(): Single<ArrayList<String>> =
+        apiInterface.getUserBanner()
+
+
+    suspend fun login(mobile: String, password: String): Response<AuthResponseModel> =
+        apiInterface!!.login(mobile, password)
+
+
+    suspend fun register(
+        mobile: String,
+        password: String,
+        email: String
+    ): Response<AuthResponseModel> =
+        apiInterface!!.register(mobile, password, email)
+
+
+    suspend fun addAddress(
+        id: String,
+        province: String,
+        town: String,
+        address: String,
+        street: String,
+        postalCode: String,
+        plaque: String,
+        reciverName: String,
+        reciverPhone: String
+    ): Response<String> = apiInterface.AddAddress(
+        id,
+        province,
+        town,
+        address,
+        street,
+        postalCode,
+        plaque,
+        reciverName,
+        reciverPhone
+    )
+
+
+    suspend fun addInfo(
+        id: String,
+        name: String,
+        mobile: String,
+        nationalID: String,
+        email: String,
+        phone: String
+    ): Response<String> =
+        apiInterface.AddInfo(id, name, mobile, nationalID, email, phone)
+
+
+    suspend fun setFavValue(id: String, fav: Int): Response<String> =
+        apiInterface!!.setFavValue(id, fav)
+
+
+    suspend fun addToCart(
+        user_id: String,
+        product_id: String,
+        order: String
+    ): Response<AddToCartResponseModel> = apiInterface.addToCart(product_id, user_id, order)
+
+
+    suspend fun pay(id: String): Response<String> = apiInterface!!.pay(id)
+
+}

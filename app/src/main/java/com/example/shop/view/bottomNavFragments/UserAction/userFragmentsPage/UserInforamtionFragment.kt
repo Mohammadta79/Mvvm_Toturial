@@ -7,15 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.shop.databinding.FragmentUserInforamtionBinding
 import com.example.shop.viewModel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class UserInforamtionFragment : Fragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentUserInforamtionBinding
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel by viewModels<UserViewModel>()
     private lateinit var response: String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,7 +31,6 @@ class UserInforamtionFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         selectedViews()
-        initViews()
     }
 
     override fun onClick(v: View?) {
@@ -70,9 +71,6 @@ class UserInforamtionFragment : Fragment(), View.OnClickListener {
         binding.btnAddInfo.setOnClickListener(this)
     }
 
-    private fun initViews() {
-        userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
-    }
 
     private fun checkInput(): Boolean {
         return (binding.edtEmail.text.toString().isNotEmpty() ||

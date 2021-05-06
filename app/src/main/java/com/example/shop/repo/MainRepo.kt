@@ -1,55 +1,63 @@
 package com.example.shop.repo
 
-import com.example.shop.api.ApiClient
-import com.example.shop.api.ApiInterface
+import com.example.shop.api.ApiInterfaceResult
 import com.example.shop.model.*
 import io.reactivex.rxjava3.core.Single
 import retrofit2.Response
+import javax.inject.Inject
 
 
-class MainRepo {
+class MainRepo @Inject constructor(val apiInterfaceResult: ApiInterfaceResult) {
 
-    private var apiInterface: ApiInterface? = null
 
-    init {
-        apiInterface = ApiClient.getClient()!!.create(ApiInterface::class.java)
+
+//    init {
+//        apiInterface = ApiClient.getClient()!!.create(ApiInterface::class.java)
+//    }
+
+//    fun getCategory(): Single<ArrayList<CategoryModel>> {
+//        return apiInterface!!.getCategory()
+//    }
+  suspend fun getCategory(): Response<ArrayList<CategoryModel>> {
+            return apiInterfaceResult.getCategory()
     }
-
-    fun getAllProducts(): Single<ArrayList<CategoryModel>> {
-        return apiInterface!!.getAllProducts()
+    fun bestSellers():Single<ArrayList<ProductModel>>{
+        return apiInterfaceResult.bestSellers()
     }
-
+    fun getOffers():Single<ArrayList<OfferProductModel>>{
+        return apiInterfaceResult.getOffers()
+    }
     fun getFavoriteProducts(id: String?): Single<ArrayList<ProductModel>> {
-        return apiInterface!!.getFavoriteProducts(id)
+        return apiInterfaceResult.getFavoriteProducts(id)
     }
 
     fun getShopCarts(id: String?): Single<ArrayList<ShopCartModel>> {
-        return apiInterface!!.getShopCarts(id)
+        return apiInterfaceResult.getShopCarts(id)
     }
 
     fun getMyProducts(id: String?): Single<ArrayList<ProductModel>> {
-        return apiInterface!!.getMyProducts(id)
+        return apiInterfaceResult.getMyProducts(id)
     }
 
     fun getAddress(id: String?): Single<ArrayList<AddressModel>> {
-        return apiInterface!!.getAddress(id)
+        return apiInterfaceResult.getAddress(id)
     }
 
     fun getCurrentAddress(id: String): Single<AddressModel> {
-        return apiInterface!!.getCurrentAddress(id)
+        return apiInterfaceResult.getCurrentAddress(id)
     }
 
     fun getProductBannerItem(): Single<ArrayList<String>> {
-        return apiInterface!!.getProductBanner()
+        return apiInterfaceResult.getProductBannerItem()
     }
 
     fun getUserBannerItem(): Single<ArrayList<String>> {
-        return apiInterface!!.getUserBanner()
+        return apiInterfaceResult.getUserBannerItem()
     }
 
 
     suspend fun login(mobile: String, password: String): Response<AuthResponseModel> {
-        return apiInterface!!.login(mobile, password)
+        return apiInterfaceResult.login(mobile, password)
     }
 
     suspend fun register(
@@ -57,7 +65,7 @@ class MainRepo {
         password: String,
         email: String
     ): Response<AuthResponseModel> {
-        return apiInterface!!.register(mobile, password, email)
+        return apiInterfaceResult.register(mobile, password, email)
     }
 
     suspend fun addAddress(
@@ -71,7 +79,7 @@ class MainRepo {
         reciverName: String,
         reciverPhone: String
     ): Response<String> {
-        return apiInterface!!.AddAddress(
+        return apiInterfaceResult.addAddress(
             id,
             province,
             town,
@@ -92,11 +100,11 @@ class MainRepo {
         email: String,
         phone: String
     ): Response<String> {
-        return apiInterface!!.AddInfo(id, name, mobile, nationalID, email, phone)
+        return apiInterfaceResult.addInfo(id, name, mobile, nationalID, email, phone)
     }
 
     suspend fun setFavValue(id: String, fav: Int): Response<String> {
-        return apiInterface!!.setFavValue(id, fav)
+        return apiInterfaceResult.setFavValue(id, fav)
     }
 
     suspend fun addToCart(
@@ -104,10 +112,10 @@ class MainRepo {
         product_id: String,
         order: String
     ): Response<AddToCartResponseModel> {
-        return apiInterface!!.addToCart(product_id, user_id, order)
+        return apiInterfaceResult.addToCart(product_id, user_id, order)
     }
 
     suspend fun pay(id: String): Response<String> {
-        return apiInterface!!.pay(id)
+        return apiInterfaceResult.pay(id)
     }
 }

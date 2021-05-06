@@ -10,8 +10,9 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.shop.databinding.FragmentAddAddressBinding
 import com.example.shop.viewModel.AddressViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class AddAddressFragment : Fragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentAddAddressBinding

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
@@ -19,12 +20,14 @@ import com.example.shop.databinding.FragmentCompletePurchaseBinding
 import com.example.shop.model.ShopCartModel
 import com.example.shop.viewModel.AddressViewModel
 import com.example.shop.viewModel.ShopCartViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class CompletePurchaseFragment : Fragment(), onShopCartItemCLickListener, View.OnClickListener {
+
     private lateinit var binding: FragmentCompletePurchaseBinding
-    private lateinit var shopCartViewModel: ShopCartViewModel
-    private lateinit var addressViewModel: AddressViewModel
+    private  val shopCartViewModel by viewModels<ShopCartViewModel>()
+    private  val addressViewModel by viewModels<AddressViewModel>()
     var total_price = 0
     var sharedPref: SharedPreferences? = null
 
@@ -45,8 +48,6 @@ class CompletePurchaseFragment : Fragment(), onShopCartItemCLickListener, View.O
     }
 
     fun initViews() {
-        shopCartViewModel = ViewModelProvider(requireActivity()).get(ShopCartViewModel::class.java)
-        addressViewModel = ViewModelProvider(requireActivity()).get(AddressViewModel::class.java)
         sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
         sharedPref!!.getString("id", null)?.let { it ->
             shopCartViewModel.getShopCartLiveData(it).observe(requireActivity()) {

@@ -6,24 +6,27 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shop.repo.MainRepo
 import com.example.shop.model.AddressModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AddressViewModel : ViewModel() {
+@HiltViewModel
+class AddressViewModel @Inject constructor(var repo: MainRepo) : ViewModel() {
 
 
     private var addressLiveData: MutableLiveData<ArrayList<AddressModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private lateinit var apiService: MainRepo
+
 
     fun getAddressLiveData(id: String?): MutableLiveData<ArrayList<AddressModel>> {
-        apiService = MainRepo()
+
         compositeDisposable.add(
-            apiService.getAddress(id)
+            repo.getAddress(id)
             !!.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<List<AddressModel?>?>() {
@@ -44,9 +47,8 @@ class AddressViewModel : ViewModel() {
 
     private var currentAddressLiveData:MutableLiveData<AddressModel> = MutableLiveData()
     fun getCurrentAddress(id: String): MutableLiveData<AddressModel> {
-        apiService = MainRepo()
         compositeDisposable.add(
-            apiService.getCurrentAddress(id)
+            repo.getCurrentAddress(id)
             !!.subscribeOn(Schedulers.newThread()).
                     observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object:DisposableSingleObserver<AddressModel?>(){
@@ -76,9 +78,8 @@ class AddressViewModel : ViewModel() {
         reciverName: String,
         reciverPhone: String
     ): String {
-        apiService = MainRepo()
         viewModelScope.launch(Dispatchers.Main) {
-            val response = apiService.addAddress(
+            val response = repo.addAddress(
                 id,
                 province,
                 town,

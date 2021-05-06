@@ -8,17 +8,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.example.shop.databinding.FragmentRegisterBinding
 import com.example.shop.view.MainActivity
 import com.example.shop.viewModel.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class RegisterFragment : Fragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentRegisterBinding
-    private lateinit var authViewModel: AuthViewModel
+    private  val authViewModel by viewModels<AuthViewModel>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,7 +32,6 @@ class RegisterFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
         selectedViews()
     }
 
@@ -43,7 +44,7 @@ class RegisterFragment : Fragment(), View.OnClickListener {
                         binding.edtPassword.text.toString(),
                         binding.edtEmail.text.toString()
                     ).observe(requireActivity()) {
-                        if (it != null) {
+                        if (it != null && it.status == "ok") {
                             val sharedPref =
                                 activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
                             sharedPref!!.edit().apply {
@@ -60,6 +61,12 @@ class RegisterFragment : Fragment(), View.OnClickListener {
                                 )
                             )
                             requireActivity().finish()
+                        } else if (it.status == "exist") {
+                            Toast.makeText(
+                                requireContext(),
+                                "این ایمیل یا شماره موبایل از قبل موجود می باشد",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 } else {
@@ -75,14 +82,10 @@ class RegisterFragment : Fragment(), View.OnClickListener {
 
     private fun checkInput(): Boolean {
         return !(binding.edtPassword.text.toString()
-            .isEmpty() || binding.edtPhoneNumber.text.isEmpty())
+            .isEmpty() || binding.edtPhoneNumber.text.isEmpty() || binding.edtEmail.text.isEmpty())
     }
 
-    private fun initViews() {
-        authViewModel = ViewModelProvider(requireActivity()).get(AuthViewModel::class.java)
 
-
-    }
 
     private fun selectedViews() {
         binding.btnRegister.setOnClickListener(this)

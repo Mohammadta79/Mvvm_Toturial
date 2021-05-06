@@ -2,29 +2,36 @@ package com.example.shop.api
 
 import com.example.shop.model.*
 import io.reactivex.rxjava3.core.Single
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiInterface {
 
-    @GET("getAllProducts.php")
-    fun getAllProducts(): Single<ArrayList<CategoryModel>>
+    @GET("getCategory.php")
+    suspend fun getCategory(): Response<ArrayList<CategoryModel>>
+
+    @GET("bestSellers.php")
+    fun bestSellers(): Single<ArrayList<ProductModel>>
+
+    @GET("getOffers.php")
+    fun getOffers(): Single<ArrayList<OfferProductModel>>
 
     @GET("getFavoriteProducts.php")
-    fun getFavoriteProducts(@Field("id") id: String?): Single<ArrayList<ProductModel>>
+    fun getFavoriteProducts(@Query("id") id: String?): Single<ArrayList<ProductModel>>
 
     @GET("getShopCart.php")
-    fun getShopCarts(@Field("id") id: String?): Single<ArrayList<ShopCartModel>>
+    fun getShopCarts(@Query("id") id: String?): Single<ArrayList<ShopCartModel>>
 
     @GET("getMyProducts.php")
-    fun getMyProducts(@Field("id") id: String?): Single<ArrayList<ProductModel>>
+    fun getMyProducts(@Query("id") id: String?): Single<ArrayList<ProductModel>>
 
     @GET("getAddress.php")
-    fun getAddress(@Field("id") id: String?): Single<ArrayList<AddressModel>>
+    fun getAddress(@Query("id") id: String?): Single<ArrayList<AddressModel>>
 
 
     @GET("getCurrentAddress.php")
-    fun getCurrentAddress(@Field("id") id: String): Single<AddressModel>
+    fun getCurrentAddress(@Query("id") id: String): Single<AddressModel>
 
     @GET("getProductBanner.php")
     fun getProductBanner(): Single<ArrayList<String>>

@@ -40,7 +40,5 @@ class CompletePurchaseProductsAdapter(
         holder.bindData(list[position])
     }
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
+    override fun getItemCount(): Int = list.size
 }

@@ -8,11 +8,12 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.example.shop.databinding.ActivityAuthBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.TabLayoutOnPageChangeListener
+import dagger.hilt.android.AndroidEntryPoint
 
 
-class AuthActivity : AppCompatActivity(){
+class AuthActivity : AppCompatActivity() {
 
-    private lateinit var binding:ActivityAuthBinding
+    private lateinit var binding: ActivityAuthBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthBinding.inflate(layoutInflater)
@@ -21,9 +22,6 @@ class AuthActivity : AppCompatActivity(){
         setupViewPager()
         tabSelected()
     }
-
-
-
 
 
     private class LoginPagerAdapter(fm: FragmentManager, var totalTabs: Int) :
@@ -46,11 +44,13 @@ class AuthActivity : AppCompatActivity(){
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("ثبت نام"))
         binding.tabLayout.tabGravity = TabLayout.GRAVITY_FILL
     }
+
     private fun setupViewPager() {
         binding.viewPager.adapter = LoginPagerAdapter(getSupportFragmentManager(), 2)
         binding.viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(binding.tabLayout))
     }
-    private fun tabSelected(){
+
+    private fun tabSelected() {
         binding.tabLayout.setOnTabSelectedListener(
             object : TabLayout.ViewPagerOnTabSelectedListener(binding.viewPager) {
                 override fun onTabSelected(tab: TabLayout.Tab) {

@@ -33,12 +33,11 @@ class ShopCartProductsAdapter(
         holder.bindData(list[position])
     }
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
-    fun deleteItem(id:Int){
-        list.forEachIndexed{index,_ ->
-            if (list[index].id == id.toString()){
+    override fun getItemCount(): Int = list.size
+
+    fun deleteItem(id: Int) {
+        list.forEachIndexed { index, _ ->
+            if (list[index].id == id.toString()) {
                 list.removeAt(index)
                 notifyItemRemoved(index)
             }

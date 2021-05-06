@@ -6,6 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shop.repo.MainRepo
 import com.example.shop.model.CategoryModel
+import com.example.shop.model.OfferProductModel
+import com.example.shop.model.ProductModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -13,43 +16,102 @@ import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
+@HiltViewModel
+class ProductViewModel @Inject constructor(var repo: MainRepo): ViewModel() {
 
-class ProductViewModel: ViewModel() {
-
-    private var mutableLiveData: MutableLiveData<ArrayList<CategoryModel>> = MutableLiveData()
+    private var categorymutableLiveData: MutableLiveData<ArrayList<CategoryModel>> = MutableLiveData()
+    private var mostCellmutableLiveData: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
+    private var offersmutableLiveData: MutableLiveData<ArrayList<OfferProductModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private lateinit var apiService: MainRepo
 
-    fun getProductLiveData(): MutableLiveData<ArrayList<CategoryModel>> {
-        apiService = MainRepo()
+
+//    fun getCategory(): MutableLiveData<ArrayList<CategoryModel>> {
+//        apiService = MainRepo()
+//        compositeDisposable.add(
+//            apiService.getCategory()
+//            !!.subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeWith(object : DisposableSingleObserver<List<CategoryModel?>?>() {
+//
+//                    override fun onSuccess(t: List<CategoryModel?>?) {
+//                        categorymutableLiveData.value = t as ArrayList<CategoryModel>?
+//                    }
+//
+//                    override fun onError(e: @io.reactivex.rxjava3.annotations.NonNull Throwable?) {
+//                        Log.e("getCategoryError", e.toString())
+//                    }
+//
+//
+//                })
+//        )
+//        return categorymutableLiveData
+//    }
+    fun getCategory(): MutableLiveData<ArrayList<CategoryModel>> {
+
+    viewModelScope.launch(Dispatchers.IO){
+        try {
+            val response = repo.getCategory()
+            if  (response.isSuccessful && response.body() != null) {
+                val data = response.body()
+                categorymutableLiveData.postValue(data)
+            } else {
+                Log.e("categoryError", response.toString())
+            }
+        }catch (e:Exception){
+           e.printStackTrace()
+        }
+    }
+    return categorymutableLiveData
+}
+
+    fun bestSellers(): MutableLiveData<ArrayList<ProductModel>> {
+
         compositeDisposable.add(
-            apiService.getAllProducts()
+            repo.bestSellers()
             !!.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<List<CategoryModel?>?>() {
-
-                    override fun onSuccess(t: List<CategoryModel?>?) {
-                        mutableLiveData.value = t as ArrayList<CategoryModel>?
+                .subscribeWith(object : DisposableSingleObserver<List<ProductModel?>?>() {
+                    override fun onSuccess(t: List<ProductModel?>?) {
+                        mostCellmutableLiveData.value = t as ArrayList<ProductModel>?
                     }
 
                     override fun onError(e: @io.reactivex.rxjava3.annotations.NonNull Throwable?) {
-                        Log.d("ProductViewModelError", e.toString())
+                        Log.e("getMostCellError", e.toString())
                     }
-
 
                 })
         )
-        return mutableLiveData
+        return mostCellmutableLiveData
     }
 
+    fun getOffers(): MutableLiveData<ArrayList<OfferProductModel>> {
 
+        compositeDisposable.add(
+            repo.getOffers()
+            !!.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<List<OfferProductModel?>?>() {
+                    override fun onSuccess(t: List<OfferProductModel?>?) {
+                        offersmutableLiveData.value = t as ArrayList<OfferProductModel>?
+                    }
+
+                    override fun onError(e: @io.reactivex.rxjava3.annotations.NonNull Throwable?) {
+                        Log.e("getMostCellError", e.toString())
+                    }
+
+                })
+        )
+        return offersmutableLiveData
+    }
+
+//TODO: this func most go to new view model
     private var favLiveData: MutableLiveData<String> = MutableLiveData()
     fun setFav(id: String, fav: Int): MutableLiveData<String> {
-        apiService = apiService
         viewModelScope.launch(Dispatchers.Main) {
-            val response = apiService.setFavValue(id, fav)
+            val response = repo.setFavValue(id, fav)
             if (response.isSuccessful && response.body() != null) {
                 favLiveData.value = response.body()
             } else {
@@ -61,9 +123,9 @@ class ProductViewModel: ViewModel() {
 
     private var bannerItemList: MutableLiveData<ArrayList<String>> = MutableLiveData()
     fun getBannerItem(): MutableLiveData<ArrayList<String>> {
-        apiService = MainRepo()
+
         compositeDisposable.add(
-            apiService.getProductBannerItem()
+            repo.getProductBannerItem()
             !!.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<List<String?>?>() {
@@ -86,4 +148,6 @@ class ProductViewModel: ViewModel() {
         compositeDisposable.clear()
         super.onCleared()
     }
+
+
 }

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.bottomNavFragments.ProductAction.ProductFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.example.moeidbannerlibrary.banner.BannerLayout
+            android:id="@+id/Banner"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:autoPlaying="true"
+            app:centerScale="1.6"
+            app:itemSpace="0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:moveSpeed="0.5"
+            app:showIndicator="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:textColor="@color/color_primary_dark"
+            android:fontFamily="@font/vazir_bold"
+            android:layout_marginRight="8dp"
+            android:textSize="16dp"
+            android:text="دسته بندیها"></TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/category_RV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:textColor="@color/color_primary_dark"
+            android:fontFamily="@font/vazir_bold"
+            android:layout_marginRight="8dp"
+            android:textSize="16dp"
+            android:text="پر فروش ها"></TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bestSellers_RV"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"></androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:textColor="@color/color_primary_dark"
+            android:fontFamily="@font/vazir_bold"
+            android:layout_marginRight="8dp"
+            android:textSize="16dp"
+            android:text="تخفیفات امروز"></TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/offers_RV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+
+
+</ScrollView>

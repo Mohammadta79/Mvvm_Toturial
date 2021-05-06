@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.example.shop.R
@@ -16,24 +17,25 @@ import com.example.shop.databinding.FragmentDetailsProductBinding
 import com.example.shop.viewModel.ProductViewModel
 import com.example.shop.viewModel.ShopCartViewModel
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class ProductDetailsFragment : Fragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentDetailsProductBinding
-    lateinit var name: String
-    lateinit var price: String
-    lateinit var desc: String
-    lateinit var category: String
-    lateinit var weight: String
-    lateinit var startPoint: String
-    lateinit var image: String
-    var favorite: Int = 0
-    var reminder: Int = 0
-    lateinit var id: String
-    lateinit var productViewModel: ProductViewModel
-    lateinit var shopCartViewModel: ShopCartViewModel
-    var sharedPref: SharedPreferences? = null
+    private lateinit var name: String
+    private lateinit var price: String
+    private lateinit var desc: String
+    private lateinit var category: String
+    private lateinit var weight: String
+    private lateinit var startPoint: String
+    private lateinit var image: String
+    private var favorite: Int = 0
+    private var reminder: Int = 0
+    private lateinit var id: String
+    private val productViewModel by viewModels<ProductViewModel>()
+    private val shopCartViewModel by viewModels<ShopCartViewModel>()
+    private var sharedPref: SharedPreferences? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -183,9 +185,6 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
         if (sharedPref!!.getString("id", null) == null) {
             binding.imgFav.visibility = View.GONE
         }
-        productViewModel = ViewModelProvider(requireActivity()).get(ProductViewModel::class.java)
-        shopCartViewModel = ViewModelProvider(requireActivity()).get(shopCartViewModel::class.java)
-
         when (favorite) {
             0 -> {
                 binding.imgFav.setImageResource(R.drawable.ic_disslike)
