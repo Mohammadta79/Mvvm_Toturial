@@ -9,7 +9,7 @@ import javax.inject.Inject
 class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
     suspend fun getCategory(): Response<ArrayList<CategoryModel>> = apiInterface.getCategory()
 
-    fun getOffers(): Single<ArrayList<OfferProductModel>> = apiInterface.getOffers()
+    fun getOffers(): Single<ArrayList<ProductModel>> = apiInterface.getOffers()
 
     fun bestSellers(): Single<ArrayList<ProductModel>> = apiInterface.bestSellers()
 
@@ -31,14 +31,6 @@ class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
 
     fun getCurrentAddress(id: String): Single<AddressModel> =
         apiInterface.getCurrentAddress(id)
-
-
-    fun getProductBannerItem(): Single<ArrayList<String>> =
-        apiInterface.getProductBanner()
-
-
-    fun getUserBannerItem(): Single<ArrayList<String>> =
-        apiInterface.getUserBanner()
 
 
     suspend fun login(mobile: String, password: String): Response<AuthResponseModel> =

@@ -66,28 +66,7 @@ class UserViewModel @Inject constructor(var repo: MainRepo) : ViewModel() {
     }
 
 
-    private var bannerItemList: MutableLiveData<ArrayList<String>> = MutableLiveData()
-    fun getBannerItem(): MutableLiveData<ArrayList<String>> {
 
-        compositeDisposable.add(
-            repo.getUserBannerItem()
-            !!.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<List<String?>?>() {
-
-                    override fun onSuccess(t: List<String?>?) {
-                        bannerItemList.value = t as ArrayList<String>?
-                    }
-
-                    override fun onError(e: @io.reactivex.rxjava3.annotations.NonNull Throwable?) {
-                        Log.d("getBannerError", e.toString())
-                    }
-
-
-                })
-        )
-        return bannerItemList
-    }
     override fun onCleared() {
         compositeDisposable.clear()
         super.onCleared()

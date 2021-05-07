@@ -8,7 +8,6 @@ data class OfferProductModel(
     var describtion: String,
     var category: String,
     var weight: String,
-    var favorite:Int,
     var reminder:Int,
-    var offer:String
+    var offer:Int
 )

@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +15,7 @@ import com.example.shop.InterFaces.onProductListItemClickListener
 import com.example.shop.R
 import com.example.shop.adapter.FavoriteProductsAdapter
 import com.example.shop.databinding.FragmentFavoriteBinding
-import com.example.shop.model.OfferProductModel
+
 import com.example.shop.model.ProductModel
 import com.example.shop.viewModel.FavoriteViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -74,13 +74,10 @@ class FavoriteFragment : Fragment(), onProductListItemClickListener {
         bundle.putString("weight", productModel.weight)
         bundle.putString("image", productModel.image)
         bundle.putString("startPoint", "favorite")
-        bundle.putInt("favorite", productModel.favorite)
         bundle.putInt("reminder", productModel.reminder)
         findNavController().navigate(R.id.action_favoriteFragment_to_detailsProductFragment, bundle)
     }
 
-    override fun onOffersListItemClick(offerProductModel: OfferProductModel) {
-        TODO("Not yet implemented")
-    }
+
 
 }

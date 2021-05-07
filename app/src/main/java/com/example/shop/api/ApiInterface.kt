@@ -15,9 +15,9 @@ interface ApiInterface {
     fun bestSellers(): Single<ArrayList<ProductModel>>
 
     @GET("getOffers.php")
-    fun getOffers(): Single<ArrayList<OfferProductModel>>
+    fun getOffers(): Single<ArrayList<ProductModel>>
 
-    @GET("getFavoriteProducts.php")
+    @GET("getFavorite.php")
     fun getFavoriteProducts(@Query("id") id: String?): Single<ArrayList<ProductModel>>
 
     @GET("getShopCart.php")
@@ -33,11 +33,6 @@ interface ApiInterface {
     @GET("getCurrentAddress.php")
     fun getCurrentAddress(@Query("id") id: String): Single<AddressModel>
 
-    @GET("getProductBanner.php")
-    fun getProductBanner(): Single<ArrayList<String>>
-
-    @GET("getUserBanner.php")
-    fun getUserBanner(): Single<ArrayList<String>>
 
     @FormUrlEncoded
     @POST("login.php")

@@ -42,9 +42,20 @@ class FavoriteProductsAdapter(
         private val binding = FavoriteFragmentListTemplateBinding.bind(itemView)
 
         fun bindData(data: ProductModel) {
+            if (data.offer == 0) {
+                binding.txtOffer.visibility = View.GONE
+                binding.txtProductPriceFavorite.text = data.price
+            } else {
+                binding.txtOffer.visibility = View.VISIBLE
+                var percent: Double = data.offer / 100.toDouble()
+                var minus = data.price.toInt() * percent
+                var offer_price: Int = data.price.toInt() - minus.toInt()
+                binding.txtOffer.text = data.offer.toString() + "%"
+                binding.txtProductPriceFavorite.text = offer_price.toString()
+            }
             Picasso.get().load(data.image).into(binding.imgProductFavorite)
             binding.txtProductNameFavorite.text = data.name
-            binding.txtProductPriceFavorite.text = data.price
+
 
             itemView.setOnClickListener { listener.onProductListItemClick(data) }
             binding.imgDeleteFavorite.setOnClickListener { deleteItem(adapterPosition) }

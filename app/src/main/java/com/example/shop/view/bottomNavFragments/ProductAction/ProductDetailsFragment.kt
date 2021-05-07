@@ -22,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProductDetailsFragment : Fragment(), View.OnClickListener {
 
+    //TODO: get & set favorite value
     private lateinit var binding: FragmentDetailsProductBinding
     private lateinit var name: String
     private lateinit var price: String
@@ -30,7 +31,6 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
     private lateinit var weight: String
     private lateinit var startPoint: String
     private lateinit var image: String
-    private var favorite: Int = 0
     private var reminder: Int = 0
     private lateinit var id: String
     private val productViewModel by viewModels<ProductViewModel>()
@@ -47,7 +47,6 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
             weight = it.getString("weight", null)
             image = it.getString("image", null)
             reminder = it.getInt("reminder", 0)
-            favorite = it.getInt("favorite", 0)
             id = it.getString("id", null)
 
         }
@@ -117,16 +116,16 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
 
 
             }
-            binding.imgFav.id -> {
-                val res = productViewModel.setFav(id, favorite)
-                res.observe(requireActivity()) {
-                    if (it == "like") {
-                        binding.imgFav.setImageResource(R.drawable.ic_like)
-                    } else {
-                        binding.imgFav.setImageResource(R.drawable.ic_disslike)
-                    }
-                }
-            }
+//            binding.imgFav.id -> {
+//                val res = productViewModel.setFav(id, favorite)
+//                res.observe(requireActivity()) {
+//                    if (it == "like") {
+//                        binding.imgFav.setImageResource(R.drawable.ic_like)
+//                    } else {
+//                        binding.imgFav.setImageResource(R.drawable.ic_disslike)
+//                    }
+//                }
+//            }
             binding.imgAddCart.id -> {
 
                 sharedPref!!.getString("id", null)
@@ -185,14 +184,14 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
         if (sharedPref!!.getString("id", null) == null) {
             binding.imgFav.visibility = View.GONE
         }
-        when (favorite) {
-            0 -> {
-                binding.imgFav.setImageResource(R.drawable.ic_disslike)
-            }
-            1 -> {
-                binding.imgFav.setImageResource(R.drawable.ic_like)
-            }
-        }
+//        when (favorite) {
+//            0 -> {
+//                binding.imgFav.setImageResource(R.drawable.ic_disslike)
+//            }
+//            1 -> {
+//                binding.imgFav.setImageResource(R.drawable.ic_like)
+//            }
+//        }
         if (reminder == 0) {
             binding.btnAddToCart.text = "اتمام موجودی!"
             binding.btnAddToCart.isEnabled = false

@@ -21,16 +21,20 @@ import com.example.shop.adapter.CategoryListAdapter
 import com.example.shop.adapter.BestSellerProductAdapter
 import com.example.shop.adapter.OfferProductAdapter
 import com.example.shop.databinding.FragmentProductBinding
-import com.example.shop.model.OfferProductModel
 import com.example.shop.model.ProductModel
 import com.example.shop.viewModel.ProductViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import javax.inject.Named
+
 @AndroidEntryPoint
 class ProductFragment : Fragment(), onProductListItemClickListener {
 
     private lateinit var binding: FragmentProductBinding
 
+    @Inject
+    @Named("ProductFragment")
+    lateinit var bannerAdapter: BaseBannerAdapter
 
     private val productViewModel by viewModels<ProductViewModel>()
 
@@ -51,7 +55,7 @@ class ProductFragment : Fragment(), onProductListItemClickListener {
     }
 
     private fun initViews() {
-       // productViewModel = ViewModelProvider(requireActivity()).get(ProductViewModel::class.java)
+        // productViewModel = ViewModelProvider(requireActivity()).get(ProductViewModel::class.java)
         //init RV category
         productViewModel.getCategory().observe(viewLifecycleOwner) {
             binding.categoryRV.apply {
@@ -78,7 +82,7 @@ class ProductFragment : Fragment(), onProductListItemClickListener {
         }
 
 
-//        //init RV Offers
+       //init RV Offers
         productViewModel.getOffers().observe(viewLifecycleOwner) {
             binding.offersRV.apply {
                 layoutManager =
@@ -91,10 +95,8 @@ class ProductFragment : Fragment(), onProductListItemClickListener {
             }
         }
 
-
-        productViewModel.getBannerItem().observe(requireActivity()) {
-            binding.Banner.setAdapter(BaseBannerAdapter(requireContext(), it))
-        }
+        //init home banner
+        binding.Banner.setAdapter(bannerAdapter)
 
 
     }
@@ -108,23 +110,7 @@ class ProductFragment : Fragment(), onProductListItemClickListener {
         bundle.putString("desc", productModel.describtion)
         bundle.putString("weight", productModel.weight)
         bundle.putString("image", productModel.image)
-        bundle.putInt("favorite", productModel.favorite)
         bundle.putInt("reminder", productModel.reminder)
-        bundle.putString("startPoint", "home")
-        findNavController().navigate(R.id.action_homeFragment_to_detailsProductFragment, bundle)
-    }
-
-    override fun onOffersListItemClick(offerProductModel: OfferProductModel) {
-        var bundle = Bundle()
-        bundle.putString("name", offerProductModel.name)
-        bundle.putString("id", offerProductModel.id)
-        bundle.putString("category", offerProductModel.category)
-        bundle.putString("price", offerProductModel.price)
-        bundle.putString("desc", offerProductModel.describtion)
-        bundle.putString("weight", offerProductModel.weight)
-        bundle.putString("image", offerProductModel.image)
-        bundle.putInt("favorite", offerProductModel.favorite)
-        bundle.putInt("reminder", offerProductModel.reminder)
         bundle.putString("startPoint", "home")
         findNavController().navigate(R.id.action_homeFragment_to_detailsProductFragment, bundle)
     }

@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,15 +17,19 @@ import com.example.shop.InterFaces.onProductListItemClickListener
 import com.example.shop.R
 import com.example.shop.adapter.BestSellerProductAdapter
 import com.example.shop.databinding.FragmentUserBinding
-import com.example.shop.model.OfferProductModel
 import com.example.shop.model.ProductModel
 import com.example.shop.view.Auth.AuthActivity
 import com.example.shop.viewModel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import javax.inject.Named
 
 @AndroidEntryPoint
 class UserFragment : Fragment(), onProductListItemClickListener, View.OnClickListener {
 
+    @Inject
+    @Named("UserFragment")
+    lateinit var bannerAdapter: BaseBannerAdapter
     private lateinit var binding: FragmentUserBinding
     private val userViewModel by viewModels<UserViewModel>()
     var sharedPref: SharedPreferences? = null
@@ -80,9 +83,9 @@ class UserFragment : Fragment(), onProductListItemClickListener, View.OnClickLis
                 }
         }
 
-        userViewModel.getBannerItem().observe(requireActivity()) {
-            binding.Banner.setAdapter(BaseBannerAdapter(requireContext(), it))
-        }
+
+            binding.Banner.setAdapter(bannerAdapter)
+
 
 
     }
@@ -96,15 +99,11 @@ class UserFragment : Fragment(), onProductListItemClickListener, View.OnClickLis
         bundle.putString("desc", productModel.describtion)
         bundle.putString("weight", productModel.weight)
         bundle.putString("image", productModel.image)
-        bundle.putInt("favorite", productModel.favorite)
         bundle.putInt("reminder", productModel.reminder)
         bundle.putString("startPoint", "User")
         findNavController().navigate(R.id.action_userFragment_to_detailsProductFragment, bundle)
     }
 
-    override fun onOffersListItemClick(offerProductModel: OfferProductModel) {
-        TODO("Not yet implemented")
-    }
 
     override fun onClick(v: View?) {
         when (v!!.id) {
@@ -123,7 +122,12 @@ class UserFragment : Fragment(), onProductListItemClickListener, View.OnClickLis
             binding.txtLogout.id -> {
 
                 requireActivity().startActivity(Intent(requireActivity(), AuthActivity::class.java))
-                sharedPref!!.edit().putString("status", "logout").apply()
+                sharedPref!!.edit().apply {
+                    putString("status", "logout").apply()
+                    putString("name", null).apply()
+                    putString("mobile", null).apply()
+                    putString("id", null).apply()
+                }
                 requireActivity().finish()
             }
         }

@@ -10,7 +10,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.TabLayoutOnPageChangeListener
 import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class AuthActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAuthBinding

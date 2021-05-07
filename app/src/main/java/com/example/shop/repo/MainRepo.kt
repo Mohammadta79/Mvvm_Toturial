@@ -24,7 +24,7 @@ class MainRepo @Inject constructor(val apiInterfaceResult: ApiInterfaceResult) {
     fun bestSellers():Single<ArrayList<ProductModel>>{
         return apiInterfaceResult.bestSellers()
     }
-    fun getOffers():Single<ArrayList<OfferProductModel>>{
+    fun getOffers():Single<ArrayList<ProductModel>>{
         return apiInterfaceResult.getOffers()
     }
     fun getFavoriteProducts(id: String?): Single<ArrayList<ProductModel>> {
@@ -45,14 +45,6 @@ class MainRepo @Inject constructor(val apiInterfaceResult: ApiInterfaceResult) {
 
     fun getCurrentAddress(id: String): Single<AddressModel> {
         return apiInterfaceResult.getCurrentAddress(id)
-    }
-
-    fun getProductBannerItem(): Single<ArrayList<String>> {
-        return apiInterfaceResult.getProductBannerItem()
-    }
-
-    fun getUserBannerItem(): Single<ArrayList<String>> {
-        return apiInterfaceResult.getUserBannerItem()
     }
 
 

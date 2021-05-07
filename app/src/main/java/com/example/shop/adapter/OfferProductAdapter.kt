@@ -7,15 +7,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shop.InterFaces.onProductListItemClickListener
 import com.example.shop.R
-import com.example.shop.databinding.ProductFragmentListTemplateBinding
 import com.example.shop.databinding.ProductFragmentOffersListTemplateBinding
-import com.example.shop.model.OfferProductModel
 import com.example.shop.model.ProductModel
 import com.squareup.picasso.Picasso
 
 class OfferProductAdapter(
     val context: Context,
-    val list: ArrayList<OfferProductModel>,
+    val list: ArrayList<ProductModel>,
     val listener: onProductListItemClickListener
 ) :
     RecyclerView.Adapter<OfferProductAdapter.HomeProductsListHolder>() {
@@ -36,12 +34,16 @@ class OfferProductAdapter(
     inner class HomeProductsListHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ProductFragmentOffersListTemplateBinding.bind(itemView)
 
-        fun bindData(data: OfferProductModel) {
-            binding.txtProductPrice.text = data.price
+        fun bindData(data: ProductModel) {
+            var percent:Double = data.offer/100.toDouble()
+            var minus = data.price.toInt() * percent
+            var offer_price:Int = data.price.toInt() - minus.toInt()
+            binding.txtProductPrice.text = offer_price.toString()
             binding.txtProductName.text = data.name
-            binding.txtOffer.text = data.offer
+            binding.txtOffer.text = data.offer.toString() + "%"
             Picasso.get().load(data.image).into(binding.imgProduct)
-            itemView.setOnClickListener { listener.onOffersListItemClick(data) }
+            itemView.setOnClickListener { listener.onProductListItemClick(data) }
+
         }
     }
 

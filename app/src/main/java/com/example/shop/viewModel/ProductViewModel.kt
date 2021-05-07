@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shop.repo.MainRepo
 import com.example.shop.model.CategoryModel
-import com.example.shop.model.OfferProductModel
 import com.example.shop.model.ProductModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 
@@ -24,8 +23,9 @@ class ProductViewModel @Inject constructor(var repo: MainRepo): ViewModel() {
 
     private var categorymutableLiveData: MutableLiveData<ArrayList<CategoryModel>> = MutableLiveData()
     private var mostCellmutableLiveData: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
-    private var offersmutableLiveData: MutableLiveData<ArrayList<OfferProductModel>> = MutableLiveData()
+    private var offersmutableLiveData: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
+
 
 
 //    fun getCategory(): MutableLiveData<ArrayList<CategoryModel>> {
@@ -87,15 +87,15 @@ class ProductViewModel @Inject constructor(var repo: MainRepo): ViewModel() {
         return mostCellmutableLiveData
     }
 
-    fun getOffers(): MutableLiveData<ArrayList<OfferProductModel>> {
+    fun getOffers(): MutableLiveData<ArrayList<ProductModel>> {
 
         compositeDisposable.add(
             repo.getOffers()
             !!.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<List<OfferProductModel?>?>() {
-                    override fun onSuccess(t: List<OfferProductModel?>?) {
-                        offersmutableLiveData.value = t as ArrayList<OfferProductModel>?
+                .subscribeWith(object : DisposableSingleObserver<List<ProductModel?>?>() {
+                    override fun onSuccess(t: List<ProductModel?>?) {
+                        offersmutableLiveData.value = t as ArrayList<ProductModel>?
                     }
 
                     override fun onError(e: @io.reactivex.rxjava3.annotations.NonNull Throwable?) {
@@ -121,28 +121,6 @@ class ProductViewModel @Inject constructor(var repo: MainRepo): ViewModel() {
         return favLiveData
     }
 
-    private var bannerItemList: MutableLiveData<ArrayList<String>> = MutableLiveData()
-    fun getBannerItem(): MutableLiveData<ArrayList<String>> {
-
-        compositeDisposable.add(
-            repo.getProductBannerItem()
-            !!.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<List<String?>?>() {
-
-                    override fun onSuccess(t: List<String?>?) {
-                        bannerItemList.value = t as ArrayList<String>?
-                    }
-
-                    override fun onError(e: @io.reactivex.rxjava3.annotations.NonNull Throwable?) {
-                        Log.d("getBannerError", e.toString())
-                    }
-
-
-                })
-        )
-        return bannerItemList
-    }
 
     override fun onCleared() {
         compositeDisposable.clear()
