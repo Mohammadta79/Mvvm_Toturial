@@ -4,9 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shop.InterFaces.onShopCartItemCLickListener
 import com.example.shop.R
@@ -37,7 +35,7 @@ class ShopCartProductsAdapter(
 
     fun deleteItem(id: Int) {
         list.forEachIndexed { index, _ ->
-            if (list[index].id == id.toString()) {
+            if (list[index].idproduct == id.toString()) {
                 list.removeAt(index)
                 notifyItemRemoved(index)
             }
@@ -62,7 +60,7 @@ class ShopCartProductsAdapter(
             itemView.setOnClickListener { lisener.onClick(data) }
 
             binding.imgAddCart.setOnClickListener {
-                lisener.onChangeCount("add", data.id)
+                lisener.onChangeCount("add", data.idproduct)
             }
             binding.imgMinesCart.setOnClickListener {
                 if (binding.imgMinesCart.drawable == AppCompatResources.getDrawable(
@@ -71,9 +69,9 @@ class ShopCartProductsAdapter(
                     )
 
                 ) {
-                    lisener.onChangeCount("delete", data.id)
+                    lisener.onChangeCount("delete", data.idproduct)
                 } else {
-                    lisener.onChangeCount("mines", data.id)
+                    lisener.onChangeCount("mines", data.idproduct)
                 }
             }
 

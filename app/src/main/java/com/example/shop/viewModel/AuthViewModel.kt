@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(var repo : MainRepo) : ViewModel() {
-    var authLoginData: MutableLiveData<AuthResponseModel> = MutableLiveData()
+  private var authLoginData: MutableLiveData<AuthResponseModel> = MutableLiveData()
 
 
     fun login(mobile: String, password: String): MutableLiveData<AuthResponseModel> {

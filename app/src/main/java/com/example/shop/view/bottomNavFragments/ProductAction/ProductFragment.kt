@@ -14,13 +14,16 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moeidbannerlibrary.banner.BaseBannerAdapter
+import com.example.shop.InterFaces.onCategoryListClickListener
 import com.example.shop.InterFaces.onProductListItemClickListener
 import com.example.shop.R
 import com.example.shop.adapter.CategoryListAdapter
 import com.example.shop.adapter.BestSellerProductAdapter
 import com.example.shop.adapter.OfferProductAdapter
 import com.example.shop.databinding.FragmentProductBinding
+import com.example.shop.model.CategoryModel
 import com.example.shop.model.ProductModel
 import com.example.shop.viewModel.ProductViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +31,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @AndroidEntryPoint
-class ProductFragment : Fragment(), onProductListItemClickListener {
+class ProductFragment : Fragment(), onProductListItemClickListener, onCategoryListClickListener {
 
     private lateinit var binding: FragmentProductBinding
 
@@ -60,10 +63,11 @@ class ProductFragment : Fragment(), onProductListItemClickListener {
         productViewModel.getCategory().observe(viewLifecycleOwner) {
             binding.categoryRV.apply {
                 layoutManager =
-                    GridLayoutManager(requireContext(), 1, GridLayoutManager.HORIZONTAL, false)
+                    StaggeredGridLayoutManager(1, GridLayoutManager.HORIZONTAL)
                 adapter = CategoryListAdapter(
                     requireContext(),
-                    it
+                    it,
+                    this@ProductFragment
                 )
             }
         }
@@ -82,7 +86,7 @@ class ProductFragment : Fragment(), onProductListItemClickListener {
         }
 
 
-       //init RV Offers
+        //init RV Offers
         productViewModel.getOffers().observe(viewLifecycleOwner) {
             binding.offersRV.apply {
                 layoutManager =
@@ -113,6 +117,12 @@ class ProductFragment : Fragment(), onProductListItemClickListener {
         bundle.putInt("reminder", productModel.reminder)
         bundle.putString("startPoint", "home")
         findNavController().navigate(R.id.action_homeFragment_to_detailsProductFragment, bundle)
+    }
+
+    override fun onCategoryClick(categoryModel: CategoryModel) {
+        var bundle = Bundle()
+        bundle.putString("category_name", categoryModel.name)
+        findNavController().navigate(R.id.action_homeFragment_to_productCategoryFragment,bundle)
     }
 
 

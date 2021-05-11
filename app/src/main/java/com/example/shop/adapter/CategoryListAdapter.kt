@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.shop.InterFaces.onCategoryListClickListener
 import com.example.shop.R
 
 import com.example.shop.databinding.ProductFragmentCategoryListTemplateBinding
@@ -13,7 +14,8 @@ import com.squareup.picasso.Picasso
 
 class CategoryListAdapter(
     val context: Context,
-    var list: List<CategoryModel>
+    var list: List<CategoryModel>,
+    var listener: onCategoryListClickListener
 
 ) : RecyclerView.Adapter<CategoryListAdapter.HomeCategoryHolder>() {
 
@@ -38,8 +40,9 @@ class CategoryListAdapter(
         fun bindData(data: CategoryModel) {
             binding.txtCategoryName.text = data.name
             Picasso.get().load(data.image).into(binding.imgCategory)
-
+            itemView.setOnClickListener{listener.onCategoryClick(data)}
         }
+
 
     }
 

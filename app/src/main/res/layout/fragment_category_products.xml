@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view.bottomNavFragments.ProductAction.ProductCategoryFragment">
+
+    <TextView
+        android:id="@+id/txt_category_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="معجون های طب سنتی"
+        android:textColor="@color/color_primary_dark"
+        android:gravity="center"
+        android:fontFamily="@font/vazir_bold"
+        android:textSize="18dp"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/category_RV"
+        android:layout_width="match_parent"
+        android:layout_margin="8dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"></androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>

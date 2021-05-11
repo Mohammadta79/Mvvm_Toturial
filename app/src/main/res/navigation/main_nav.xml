@@ -17,6 +17,11 @@
             app:exitAnim="@android:anim/slide_out_right"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_homeFragment_to_productCategoryFragment"
+            app:destination="@id/productCategoryFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/favoriteFragment"
@@ -86,10 +91,14 @@
         tools:layout="@layout/fragment_details_product" >
         <action
             android:id="@+id/action_detailsProductFragment_to_shopCartFragment"
-            app:destination="@id/shopCartFragment" />
+            app:destination="@id/shopCartFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_detailsProductFragment_to_completePurchaseFragment"
-            app:destination="@id/completePurchaseFragment" />
+            app:destination="@id/completePurchaseFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/addressFragment"
@@ -122,5 +131,16 @@
         <action
             android:id="@+id/action_completePurchaseFragment_to_detailsProductFragment"
             app:destination="@id/detailsProductFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productCategoryFragment"
+        android:name="com.example.shop.view.bottomNavFragments.ProductAction.ProductCategoryFragment"
+        android:label="fragment_category_products"
+        tools:layout="@layout/fragment_category_products" >
+        <action
+            android:id="@+id/action_productCategoryFragment_to_detailsProductFragment"
+            app:destination="@id/detailsProductFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
 </navigation>

@@ -32,10 +32,7 @@ class FavoriteProductsAdapter(
 
     override fun getItemCount(): Int = list.size
 
-    fun deleteItem(postition: Int) {
-        list.removeAt(postition)
-        notifyItemRemoved(postition)
-    }
+
 
 
     inner class FavoriteProductsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -58,7 +55,7 @@ class FavoriteProductsAdapter(
 
 
             itemView.setOnClickListener { listener.onProductListItemClick(data) }
-            binding.imgDeleteFavorite.setOnClickListener { deleteItem(adapterPosition) }
+
         }
 
     }

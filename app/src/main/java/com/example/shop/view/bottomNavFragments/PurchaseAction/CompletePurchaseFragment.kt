@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -81,10 +80,10 @@ class CompletePurchaseFragment : Fragment(), onShopCartItemCLickListener, View.O
     override fun onClick(shopCartModel: ShopCartModel) {
         var bundle = Bundle()
         bundle.putString("name", shopCartModel.name)
-        bundle.putString("id", shopCartModel.id)
+        bundle.putString("id", shopCartModel.idproduct)
         bundle.putString("category", shopCartModel.category)
         bundle.putString("price", shopCartModel.price)
-        bundle.putString("desc", shopCartModel.desc)
+        bundle.putString("desc", shopCartModel.describtion)
         bundle.putString("weight", shopCartModel.weight)
         bundle.putString("image", shopCartModel.image)
         bundle.putInt("favorite", shopCartModel.favorite)

@@ -3,15 +3,15 @@ package com.example.shop.view.bottomNavFragments.ProductAction
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import com.example.shop.R
 import com.example.shop.databinding.FragmentDetailsProductBinding
 import com.example.shop.viewModel.ProductViewModel
@@ -32,7 +32,8 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
     private lateinit var startPoint: String
     private lateinit var image: String
     private var reminder: Int = 0
-    private lateinit var id: String
+    private lateinit var product_id: String
+    private lateinit var user_id: String
     private val productViewModel by viewModels<ProductViewModel>()
     private val shopCartViewModel by viewModels<ShopCartViewModel>()
     private var sharedPref: SharedPreferences? = null
@@ -47,7 +48,8 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
             weight = it.getString("weight", null)
             image = it.getString("image", null)
             reminder = it.getInt("reminder", 0)
-            id = it.getString("id", null)
+            product_id = it.getString("id", null)
+
 
         }
     }
@@ -82,37 +84,26 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
 
         when (v!!.id) {
             binding.btnAddToCart.id -> {
-                if (startPoint.equals("shopCart")) {
-                    Toast.makeText(
-                        requireContext(),
-                        "این محصول در سبد شما موجود است",
-                        Toast.LENGTH_LONG
-                    ).show()
+                shopCartViewModel.addToShopCart(user_id.toInt(), product_id.toInt())
+                    .observe(viewLifecycleOwner) {
 
-                } else {
-
-                    if (sharedPref!!.getString("id", null) == null) {
-                        Toast.makeText(
-                            requireContext(),
-                            "لطفا ابتدا ثبت نام کنید(در صفحه فروشگاه من عبارت ثبت نام وجود دارد)",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    } else {
-                        sharedPref!!.getString("id", null)
-                            ?.let {
-                                val res = shopCartViewModel.addTocart(it, id, "add")
-                                res.observe(requireActivity()) {
-                                    reminder = it.reminder
-                                    if (reminder == 0) {
-                                        binding.imgAddCart.isEnabled = false
-                                    }
-                                    binding.btnAddToCart.visibility = View.INVISIBLE
-                                    binding.cardHandelCart.visibility = View.VISIBLE
+                            when (it.status) {
+                                "ok" -> {
+                                    binding.btnAddToCart.visibility = View.GONE
+                                    binding.txtGoToShopCart.visibility = View.VISIBLE
+                                }
+                                else -> {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "خطایی رخ داده است",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    binding.btnAddToCart.visibility = View.VISIBLE
+                                    binding.txtGoToShopCart.visibility = View.GONE
                                 }
                             }
 
                     }
-                }
 
 
             }
@@ -126,64 +117,30 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
 //                    }
 //                }
 //            }
-            binding.imgAddCart.id -> {
 
-                sharedPref!!.getString("id", null)
-                    ?.let {
-                        val res = shopCartViewModel.addTocart(it, id, "add")
-                        res.observe(requireActivity()) {
-                            reminder = it.reminder
-                            if (reminder == 0) {
-                                binding.imgAddCart.isEnabled = false
-                            }
-                        }
-                    }
+            binding.txtGoToShopCart.id -> {
+                findNavController().navigate(R.id.action_detailsProductFragment_to_shopCartFragment)
             }
-            binding.imgMinesCart.id -> {
 
-                sharedPref!!.getString("id", null)
-                    ?.let {
-                        if (binding.imgMinesCart.drawable == getDrawable(
-                                requireContext(),
-                                R.drawable.ic_delete
-                            )
-                        ) {
-                            val res = shopCartViewModel.addTocart(it, id, "delete")
-                            res.observe(requireActivity()) {
-                                if (it.status == "ok") {
-                                    binding.btnAddToCart.visibility = View.VISIBLE
-                                    binding.btnAddToCart.isEnabled = true
-                                    binding.cardHandelCart.visibility = View.INVISIBLE
-                                }
-                            }
-
-                        } else {
-                            val res = shopCartViewModel.addTocart(it, id, "mines")
-                            res.observe(requireActivity()) {
-                                reminder = it.reminder
-                                if (it.count.toInt() == 0) {
-                                    binding.imgMinesCart.setImageResource(R.drawable.ic_delete)
-                                }
-                            }
-                        }
-
-                    }
-            }
         }
     }
 
     fun selectedViews() {
         binding.btnAddToCart.setOnClickListener(this)
+        binding.txtGoToShopCart.setOnClickListener(this)
         binding.imgFav.setOnClickListener(this)
-        binding.imgMinesCart.setOnClickListener(this)
-        binding.imgAddCart.setOnClickListener(this)
     }
 
     private fun initViews() {
         sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
-        if (sharedPref!!.getString("id", null) == null) {
+        sharedPref!!.getString("id", null)
+            ?.let {
+                user_id = it
+            }
+        if (user_id == null) {
             binding.imgFav.visibility = View.GONE
         }
+
 //        when (favorite) {
 //            0 -> {
 //                binding.imgFav.setImageResource(R.drawable.ic_disslike)
@@ -196,7 +153,20 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
             binding.btnAddToCart.text = "اتمام موجودی!"
             binding.btnAddToCart.isEnabled = false
         }
+        shopCartViewModel.checkShopCart(user_id.toInt(), product_id.toInt())
+            .observe(viewLifecycleOwner) {
+                when (it.status) {
+                    "exist" -> {
+                        binding.btnAddToCart.visibility = View.GONE
+                        binding.txtGoToShopCart.visibility = View.VISIBLE
+                    }
+                    "notExist" -> {
+                        binding.btnAddToCart.visibility = View.VISIBLE
+                        binding.txtGoToShopCart.visibility = View.GONE
+                    }
+                }
 
+            }
     }
 
 }

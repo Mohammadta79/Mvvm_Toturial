@@ -99,12 +99,25 @@ class MainRepo @Inject constructor(val apiInterfaceResult: ApiInterfaceResult) {
         return apiInterfaceResult.setFavValue(id, fav)
     }
 
-    suspend fun addToCart(
+    suspend fun manageShopCart(
         user_id: String,
         product_id: String,
         order: String
     ): Response<AddToCartResponseModel> {
-        return apiInterfaceResult.addToCart(product_id, user_id, order)
+        return apiInterfaceResult.manageShopCart(product_id, user_id, order)
+    }
+    suspend fun addToShopCart(
+        user_id: Int,
+        product_id: Int
+    ): Response<CheckCartModel> {
+        return apiInterfaceResult.addToShopCart(user_id, product_id)
+    }
+
+    suspend fun checkShopCart(
+        user_id: Int,
+        product_id: Int
+    ): Response<CheckCartModel> {
+        return apiInterfaceResult.checkShopCart(user_id, product_id)
     }
 
     suspend fun pay(id: String): Response<String> {

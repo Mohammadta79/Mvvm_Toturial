@@ -8,8 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +25,7 @@ class ShopCartFragment : Fragment(), onShopCartItemCLickListener, View.OnClickLi
     private val shopCartViewModel by viewModels<ShopCartViewModel>()
     private lateinit var shopCartList: ArrayList<ShopCartModel>
     private lateinit var adapter: ShopCartProductsAdapter
+    private var user_id:String? = null
     var sharedPref: SharedPreferences? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,29 +44,28 @@ class ShopCartFragment : Fragment(), onShopCartItemCLickListener, View.OnClickLi
 
     fun initViews() {
         sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
-        if (sharedPref!!.getString("id", null) != null) {
-            shopCartViewModel.getShopCartLiveData(sharedPref!!.getString("id", null))
+        sharedPref!!.getString("id",null).let {
+            user_id = it
+        }
+
+        shopCartViewModel.getShopCartLiveData(user_id)
                 .observe(requireActivity()) {
-                    shopCartList = it
-                    adapter.notifyDataSetChanged()
+                    binding.shopCartRV.apply {
+                        adapter = ShopCartProductsAdapter(
+                            requireContext(),
+                            it,
+                            this@ShopCartFragment)
+                        layoutManager =
+                            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+                    }
                     if (it.isNotEmpty()) {
                         binding.btnGoNext.visibility = View.VISIBLE
                     }
                 }
-        }
 
-        shopCartList = ArrayList()
 
-        adapter = ShopCartProductsAdapter(
-            requireContext(),
-            shopCartList,
-            this@ShopCartFragment
-        )
-        binding.shopCartRecyclerView.apply {
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-            adapter = adapter
-        }
+
 
 
     }
@@ -75,10 +73,10 @@ class ShopCartFragment : Fragment(), onShopCartItemCLickListener, View.OnClickLi
     override fun onClick(shopCartModel: ShopCartModel) {
         var bundle = Bundle()
         bundle.putString("name", shopCartModel.name)
-        bundle.putString("id", shopCartModel.id)
+        bundle.putString("id", shopCartModel.idproduct)
         bundle.putString("category", shopCartModel.category)
         bundle.putString("price", shopCartModel.price)
-        bundle.putString("desc", shopCartModel.desc)
+        bundle.putString("desc", shopCartModel.describtion)
         bundle.putString("weight", shopCartModel.weight)
         bundle.putString("image", shopCartModel.image)
         bundle.putInt("favorite", shopCartModel.favorite)
@@ -89,14 +87,14 @@ class ShopCartFragment : Fragment(), onShopCartItemCLickListener, View.OnClickLi
 
     override fun onChangeCount(order: String, id: String) {
         sharedPref!!.getString("id", null)?.let {
-            val response = shopCartViewModel.addTocart(it, id, order)
+            val response = shopCartViewModel.manageShopCart(it, id, order)
             response.observe(requireActivity()) {
                 if (order != "delete") {
                     shopCartList.forEachIndexed { index, _ ->
-                        if (shopCartList[index].id == id) {
+                        if (shopCartList[index].idproduct == id) {
                             shopCartList[index].count = it.count.toInt()
                             shopCartList[index].price = it.price
-                            shopCartList[index].reminder = it.reminder
+                           // shopCartList[index].reminder = it.reminder
                             adapter.notifyDataSetChanged()
                         }
                     }

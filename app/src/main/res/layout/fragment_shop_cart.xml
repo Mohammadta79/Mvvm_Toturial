@@ -9,19 +9,22 @@
 <androidx.recyclerview.widget.RecyclerView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/shopCart_recycler_view"></androidx.recyclerview.widget.RecyclerView>
+    android:layout_marginBottom="60dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:id="@+id/shopCart_RV"></androidx.recyclerview.widget.RecyclerView>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_go_next"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:background="@drawable/shape_btn_login"
         android:fontFamily="@font/vazir"
         android:text="ادامه فرآیند خرید"
-        android:textColor="@color/white"
         android:visibility="gone"
-        android:layout_margin="10dp"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"></androidx.appcompat.widget.AppCompatButton>
+        app:layout_constraintStart_toStartOf="parent"></androidx.appcompat.widget.AppCompatButton>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
