@@ -11,27 +11,27 @@ import com.example.shop.databinding.ProductFragmentListTemplateBinding
 import com.example.shop.model.ProductModel
 import com.squareup.picasso.Picasso
 
-class BestSellerProductAdapter(
+class ProductAdapter(
     val context: Context,
     val list: ArrayList<ProductModel>,
     val listener: onProductListItemClickListener
 ) :
-    RecyclerView.Adapter<BestSellerProductAdapter.HomeProductsListHolder>() {
+    RecyclerView.Adapter<ProductAdapter.ProductsListHolder>() {
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeProductsListHolder =
-        HomeProductsListHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductsListHolder =
+        ProductsListHolder(
             LayoutInflater.from(context)
                 .inflate(R.layout.product_fragment_list_template, parent, false)
         )
 
-    override fun onBindViewHolder(holder: HomeProductsListHolder, position: Int) {
+    override fun onBindViewHolder(holder: ProductsListHolder, position: Int) {
         holder.bindData(list[position])
     }
 
     override fun getItemCount(): Int = list.size
 
-    inner class HomeProductsListHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ProductsListHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ProductFragmentListTemplateBinding.bind(itemView)
 
         fun bindData(data: ProductModel) {

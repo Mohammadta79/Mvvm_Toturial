@@ -32,6 +32,8 @@ class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
         apiInterface.getCurrentAddress(id)
 
 
+    fun getOrders(id: String): Single<ArrayList<OrdersModel>> = apiInterface.getOrders(id)
+
     suspend fun login(mobile: String, password: String): Response<AuthResponseModel> =
         apiInterface!!.login(mobile, password)
 
@@ -96,7 +98,7 @@ class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
     suspend fun checkShopCart(
         user_id: Int,
         product_id: Int
-    ):Response<CheckCartModel> = apiInterface.checkShopCart(user_id,product_id)
+    ): Response<CheckCartModel> = apiInterface.checkShopCart(user_id, product_id)
 
     suspend fun pay(id: String): Response<String> = apiInterface!!.pay(id)
 

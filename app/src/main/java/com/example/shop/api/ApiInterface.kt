@@ -33,6 +33,8 @@ interface ApiInterface {
     @GET("getCurrentAddress.php")
     fun getCurrentAddress(@Query("id") id: String): Single<AddressModel>
 
+    @GET("getOrders.php")
+    fun getOrders(@Query("id") id: String): Single<ArrayList<OrdersModel>>
 
     @FormUrlEncoded
     @POST("login.php")
@@ -102,7 +104,7 @@ interface ApiInterface {
     suspend fun checkShopCart(
         @Field("user_id") user_id: Int,
         @Field("product_id") product_id: Int
-    ):Response<CheckCartModel>
+    ): Response<CheckCartModel>
 
     @FormUrlEncoded
     @POST("pay.php")

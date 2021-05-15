@@ -20,7 +20,7 @@ object ApiProvider {
     fun provideRetrofit(): Retrofit =
         Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-            .baseUrl("http://192.168.0.1/shop/").build()
+            .baseUrl("http://mohammadta79.ir/shop/").build()
 
 
     @Singleton

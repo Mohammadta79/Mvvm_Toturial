@@ -21,8 +21,8 @@ class AddressViewModel @Inject constructor(var repo: MainRepo) : ViewModel() {
 
     private var addressLiveData: MutableLiveData<ArrayList<AddressModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-
-
+    private var currentAddressLiveData:MutableLiveData<AddressModel> = MutableLiveData()
+    private lateinit var addResponse: String
     fun getAddressLiveData(id: String?): MutableLiveData<ArrayList<AddressModel>> {
 
         compositeDisposable.add(
@@ -45,7 +45,7 @@ class AddressViewModel @Inject constructor(var repo: MainRepo) : ViewModel() {
         return addressLiveData
     }
 
-    private var currentAddressLiveData:MutableLiveData<AddressModel> = MutableLiveData()
+
     fun getCurrentAddress(id: String): MutableLiveData<AddressModel> {
         compositeDisposable.add(
             repo.getCurrentAddress(id)
@@ -66,7 +66,7 @@ class AddressViewModel @Inject constructor(var repo: MainRepo) : ViewModel() {
     }
 
 
-    private lateinit var addResponse: String
+
     fun addAddress(
         id: String,
         province: String,

@@ -1,6 +1,7 @@
 package com.example.shop.view.bottomNavFragments.UserAction.userFragmentsPage
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -23,7 +24,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class AddressFragment : Fragment(), View.OnClickListener {
     private lateinit var binding: FragmentAddressBinding
     private val addressViewModel by viewModels<AddressViewModel>()
-
+    private lateinit var user_id: String
+    var sharedPref: SharedPreferences? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,19 +53,20 @@ class AddressFragment : Fragment(), View.OnClickListener {
     fun initViews() {
 
         val sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
-        sharedPref!!.getString("id", null)?.let {
-            addressViewModel.getAddressLiveData(sharedPref!!.getString("id", null))
-                .observe(requireActivity()) {
-                    binding.addressRecycler.apply {
-                        adapter = AddressAdapter(requireContext(), it)
-                        layoutManager = LinearLayoutManager(
-                            requireContext(),
-                            LinearLayoutManager.VERTICAL,
-                            false
-                        )
-                    }
+        user_id = sharedPref!!.getString("id", null).toString()
+
+        addressViewModel.getAddressLiveData(user_id)
+            .observe(requireActivity()) {
+                binding.addressRecycler.apply {
+                    adapter = AddressAdapter(requireContext(), it)
+                    layoutManager = LinearLayoutManager(
+                        requireContext(),
+                        LinearLayoutManager.VERTICAL,
+                        false
+                    )
                 }
-        }
+
+            }
 
 
     }

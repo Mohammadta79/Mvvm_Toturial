@@ -23,8 +23,6 @@ class AddressAdapter(
             binding.txtPhoneNumber.text = data.mobile
             binding.txtPostalCade.text = data.postalCode
             binding.txtReciver.text = data.reciver
-
-
         }
 
 

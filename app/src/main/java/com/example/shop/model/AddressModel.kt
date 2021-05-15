@@ -9,5 +9,6 @@ data class AddressModel(
     var reciver: String,
     var plaque: String,
     var mobile: String,
-    var street: String
+    var street: String,
+    var user_id:String
 )

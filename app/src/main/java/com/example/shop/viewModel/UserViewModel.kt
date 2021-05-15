@@ -19,30 +19,30 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(var repo: MainRepo) : ViewModel() {
 
 
-    private var mutableLiveData: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
+  //  private var mutableLiveData: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
 
-    fun getMyProductLiveData(id: String?): MutableLiveData<ArrayList<ProductModel>> {
-        compositeDisposable.add(
-            repo.getMyProducts(id)
-            !!.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<List<ProductModel?>?>() {
-
-                    override fun onSuccess(t: List<ProductModel?>?) {
-                        mutableLiveData.value = t as ArrayList<ProductModel>?
-                    }
-
-                    override fun onError(e: @io.reactivex.rxjava3.annotations.NonNull Throwable?) {
-                        Log.d("FavoriteViewModelError", e.toString())
-                    }
-
-
-                })
-        )
-        return mutableLiveData
-    }
+//    fun getMyProductLiveData(id: String?): MutableLiveData<ArrayList<ProductModel>> {
+//        compositeDisposable.add(
+//            repo.getMyProducts(id)
+//            !!.subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeWith(object : DisposableSingleObserver<List<ProductModel?>?>() {
+//
+//                    override fun onSuccess(t: List<ProductModel?>?) {
+//                        mutableLiveData.value = t as ArrayList<ProductModel>?
+//                    }
+//
+//                    override fun onError(e: @io.reactivex.rxjava3.annotations.NonNull Throwable?) {
+//                        Log.d("FavoriteViewModelError", e.toString())
+//                    }
+//
+//
+//                })
+//        )
+//        return mutableLiveData
+//    }
 
     private lateinit var addInfoResponse: String
     fun addUserInfo(

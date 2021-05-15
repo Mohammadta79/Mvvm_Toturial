@@ -58,12 +58,17 @@ class ShopCartViewModel @Inject constructor(var repo : MainRepo) : ViewModel() {
     ): MutableLiveData<AddToCartResponseModel> {
 
         viewModelScope.launch(Dispatchers.Main) {
-            val response = repo.manageShopCart(user_id, product_id, order)
-            if (response.isSuccessful && response.body() != null) {
-                manageCartLD.value = response.body()
-            } else {
-                Log.e("manageCartVMError", response.errorBody().toString())
+            try{
+                val response = repo.manageShopCart(user_id, product_id, order)
+                if (response.isSuccessful && response.body() != null) {
+                    manageCartLD.value = response.body()
+                } else {
+                    Log.e("manageCartVMError", response.errorBody().toString())
+                }
+            }catch (e:Exception){
+                e.printStackTrace()
             }
+
         }
         return manageCartLD
     }

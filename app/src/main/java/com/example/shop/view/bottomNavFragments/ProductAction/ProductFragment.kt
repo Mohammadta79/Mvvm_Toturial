@@ -1,15 +1,12 @@
 package com.example.shop.view.bottomNavFragments.ProductAction
 
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,7 +17,7 @@ import com.example.shop.InterFaces.onCategoryListClickListener
 import com.example.shop.InterFaces.onProductListItemClickListener
 import com.example.shop.R
 import com.example.shop.adapter.CategoryListAdapter
-import com.example.shop.adapter.BestSellerProductAdapter
+import com.example.shop.adapter.ProductAdapter
 import com.example.shop.adapter.OfferProductAdapter
 import com.example.shop.databinding.FragmentProductBinding
 import com.example.shop.model.CategoryModel
@@ -77,7 +74,7 @@ class ProductFragment : Fragment(), onProductListItemClickListener, onCategoryLi
             binding.bestSellersRV.apply {
                 layoutManager =
                     LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                adapter = BestSellerProductAdapter(
+                adapter = ProductAdapter(
                     requireContext(),
                     it,
                     this@ProductFragment
