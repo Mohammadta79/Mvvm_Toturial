@@ -20,9 +20,6 @@ class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
         apiInterface.getShopCarts(id)
 
 
-    fun getMyProducts(id: String?): Single<ArrayList<ProductModel>> =
-        apiInterface.getMyProducts(id)
-
 
     fun getAddress(id: String?): Single<ArrayList<AddressModel>> =
         apiInterface.getAddress(id)

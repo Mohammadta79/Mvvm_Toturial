@@ -4,8 +4,9 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shop.repo.MainRepo
+
 import com.example.shop.model.AddressModel
+import com.example.shop.repo.AddressRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddressViewModel @Inject constructor(var repo: MainRepo) : ViewModel() {
+class AddressViewModel @Inject constructor(var repo: AddressRepo) : ViewModel() {
 
 
     private var addressLiveData: MutableLiveData<ArrayList<AddressModel>> = MutableLiveData()

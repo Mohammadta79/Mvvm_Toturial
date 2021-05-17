@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shop.model.CheckCartModel
-import com.example.shop.repo.MainRepo
 import com.example.shop.model.AddToCartResponseModel
 import com.example.shop.model.ShopCartModel
+import com.example.shop.repo.ShopCartRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ShopCartViewModel @Inject constructor(var repo : MainRepo) : ViewModel() {
+class ShopCartViewModel @Inject constructor(var repo : ShopCartRepo) : ViewModel() {
 
 
     private var cartListLD: MutableLiveData<ArrayList<ShopCartModel>> = MutableLiveData()
@@ -110,6 +110,7 @@ class ShopCartViewModel @Inject constructor(var repo : MainRepo) : ViewModel() {
         }
         return checkCartLD
     }
+
 
     private var payResponse:MutableLiveData<String> = MutableLiveData()
     fun pay(id: String): MutableLiveData<String> {

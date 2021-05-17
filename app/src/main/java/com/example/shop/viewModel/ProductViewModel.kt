@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shop.repo.MainRepo
 import com.example.shop.model.CategoryModel
 import com.example.shop.model.ProductModel
+import com.example.shop.repo.ProductRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -19,36 +19,13 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class ProductViewModel @Inject constructor(var repo: MainRepo): ViewModel() {
+class ProductViewModel @Inject constructor(var repo: ProductRepo): ViewModel() {
 
     private var categorymutableLiveData: MutableLiveData<ArrayList<CategoryModel>> = MutableLiveData()
     private var mostCellmutableLiveData: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
     private var offersmutableLiveData: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-
-
-//    fun getCategory(): MutableLiveData<ArrayList<CategoryModel>> {
-//        apiService = MainRepo()
-//        compositeDisposable.add(
-//            apiService.getCategory()
-//            !!.subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeWith(object : DisposableSingleObserver<List<CategoryModel?>?>() {
-//
-//                    override fun onSuccess(t: List<CategoryModel?>?) {
-//                        categorymutableLiveData.value = t as ArrayList<CategoryModel>?
-//                    }
-//
-//                    override fun onError(e: @io.reactivex.rxjava3.annotations.NonNull Throwable?) {
-//                        Log.e("getCategoryError", e.toString())
-//                    }
-//
-//
-//                })
-//        )
-//        return categorymutableLiveData
-//    }
     fun getCategory(): MutableLiveData<ArrayList<CategoryModel>> {
 
     viewModelScope.launch(Dispatchers.IO){
@@ -106,21 +83,6 @@ class ProductViewModel @Inject constructor(var repo: MainRepo): ViewModel() {
         )
         return offersmutableLiveData
     }
-
-//TODO: this func most go to new view model
-    private var favLiveData: MutableLiveData<String> = MutableLiveData()
-    fun setFav(id: String, fav: Int): MutableLiveData<String> {
-        viewModelScope.launch(Dispatchers.Main) {
-            val response = repo.setFavValue(id, fav)
-            if (response.isSuccessful && response.body() != null) {
-                favLiveData.value = response.body()
-            } else {
-                Log.e("setFavError", response.errorBody().toString())
-            }
-        }
-        return favLiveData
-    }
-
 
     override fun onCleared() {
         compositeDisposable.clear()

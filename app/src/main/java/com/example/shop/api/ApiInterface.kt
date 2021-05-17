@@ -23,8 +23,6 @@ interface ApiInterface {
     @GET("getShopCart.php")
     fun getShopCarts(@Query("id") id: String?): Single<ArrayList<ShopCartModel>>
 
-    @GET("getMyProducts.php")
-    fun getMyProducts(@Query("id") id: String?): Single<ArrayList<ProductModel>>
 
     @GET("getAddress.php")
     fun getAddress(@Query("id") id: String?): Single<ArrayList<AddressModel>>
