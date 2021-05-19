@@ -2,7 +2,7 @@ package com.example.shop.repo
 
 import com.example.shop.api.ApiInterfaceResult
 import com.example.shop.model.AddToCartResponseModel
-import com.example.shop.model.CheckCartModel
+import com.example.shop.model.StringResponseModel
 import com.example.shop.model.ShopCartModel
 import io.reactivex.rxjava3.core.Single
 import retrofit2.Response
@@ -23,14 +23,14 @@ class ShopCartRepo @Inject constructor(val apiInterfaceResult: ApiInterfaceResul
     suspend fun addToShopCart(
         user_id: Int,
         product_id: Int
-    ): Response<CheckCartModel>
+    ): Response<StringResponseModel>
             = apiInterfaceResult.addToShopCart(user_id, product_id)
 
 
     suspend fun checkShopCart(
         user_id: Int,
         product_id: Int
-    ): Response<CheckCartModel>
+    ): Response<StringResponseModel>
             = apiInterfaceResult.checkShopCart(user_id, product_id)
 
 

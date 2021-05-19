@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.example.shop.model.AddressModel
+import com.example.shop.model.StringResponseModel
 import com.example.shop.repo.AddressRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -23,7 +24,7 @@ class AddressViewModel @Inject constructor(var repo: AddressRepo) : ViewModel() 
     private var addressLiveData: MutableLiveData<ArrayList<AddressModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private var currentAddressLiveData:MutableLiveData<AddressModel> = MutableLiveData()
-    private lateinit var addResponse: String
+    private var addResponse: MutableLiveData<StringResponseModel> = MutableLiveData()
     fun getAddressLiveData(id: String?): MutableLiveData<ArrayList<AddressModel>> {
 
         compositeDisposable.add(
@@ -69,34 +70,24 @@ class AddressViewModel @Inject constructor(var repo: AddressRepo) : ViewModel() 
 
 
     fun addAddress(
-        id: String,
-        province: String,
-        town: String,
-        address: String,
-        street: String,
-        postalCode: String,
-        plaque: String,
-        reciverName: String,
-        reciverPhone: String
-    ): String {
-        viewModelScope.launch(Dispatchers.Main) {
-            val response = repo.addAddress(
-                id,
-                province,
-                town,
-                address,
-                street,
-                postalCode,
-                plaque,
-                reciverName,
-                reciverPhone
-            )
-            if (response.isSuccessful && response.body() != null) {
-                addResponse = response.body()!!
-            } else {
-                Log.e("AddAddressError", response.errorBody().toString())
-            }
-        }
+       params:HashMap<String,String>
+    ): MutableLiveData<StringResponseModel> {
+        compositeDisposable.add(
+            repo.addAddress(params)!!
+                .subscribeOn(Schedulers.newThread()).
+                    observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object :DisposableSingleObserver<StringResponseModel?>(){
+                    override fun onSuccess(t: StringResponseModel?) {
+                       addResponse.value = t as StringResponseModel
+                    }
+
+                    override fun onError(e: Throwable?) {
+                        Log.e("AddAddressError",e.toString())
+                    }
+                }
+                )
+        )
+
         return addResponse
     }
 

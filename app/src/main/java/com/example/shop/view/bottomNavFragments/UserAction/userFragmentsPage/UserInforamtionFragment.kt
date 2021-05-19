@@ -1,6 +1,7 @@
 package com.example.shop.view.bottomNavFragments.UserAction.userFragmentsPage
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,7 +19,8 @@ class UserInforamtionFragment : Fragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentUserInforamtionBinding
     private val userViewModel by viewModels<UserViewModel>()
-    private lateinit var response: String
+    private var sharedPref:SharedPreferences? = null
+    private lateinit var user_id : String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,6 +32,7 @@ class UserInforamtionFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViews()
         selectedViews()
     }
 
@@ -37,29 +40,32 @@ class UserInforamtionFragment : Fragment(), View.OnClickListener {
         when (v!!.id) {
             binding.btnAddInfo.id -> {
                 if (checkInput()) {
-                    val sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
-                    sharedPref!!.getString("id", null)?.let {
-                        response = userViewModel.addUserInfo(
+                  user_id.let {
+                       userViewModel.addUserInfo(
                             it,
                             binding.edtName.text.toString(),
                             binding.edtMobile.text.toString(),
                             binding.edtNationalID.text.toString(),
                             binding.edtEmail.text.toString(),
                             binding.edtPhone.text.toString()
-                        )
-                        when (response) {
-                            "ok" -> {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "اطلاعات با موفقیت ثبت شد",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                            else -> {
-                                Toast.makeText(requireContext(), "خطا", Toast.LENGTH_SHORT).show()
-                            }
-                        }
+                        ).observe(viewLifecycleOwner){
+                           when (it.status) {
+                               "ok" -> {
+                                   Toast.makeText(
+                                       requireContext(),
+                                       "اطلاعات با موفقیت ثبت شد",
+                                       Toast.LENGTH_SHORT
+                                   ).show()
+                               }
+                               else -> {
+                                   Toast.makeText(requireContext(), "خطا", Toast.LENGTH_SHORT).show()
+                               }
+                           }
+                       }
+
                     }
+                }else{
+                    Toast.makeText(requireContext(),"لطفا تمامی مقادیر را به دقت وارد نمایید",Toast.LENGTH_LONG).show()
                 }
 
 
@@ -71,6 +77,18 @@ class UserInforamtionFragment : Fragment(), View.OnClickListener {
         binding.btnAddInfo.setOnClickListener(this)
     }
 
+    private fun initViews(){
+        sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
+        user_id = sharedPref!!.getString("id", null).toString()
+        userViewModel.getUserInfo(user_id).observe(viewLifecycleOwner){
+            binding.edtEmail.setText(it[0].email)
+            binding.edtMobile.setText(it[0].mobile)
+            binding.edtName.setText(it[0].name)
+            binding.edtNationalID.setText(it[0].national_id)
+            binding.edtPassword.setText(it[0].password)
+            binding.edtPhone.setText(it[0].phone)
+        }
+    }
 
     private fun checkInput(): Boolean {
         return (binding.edtEmail.text.toString().isNotEmpty() ||

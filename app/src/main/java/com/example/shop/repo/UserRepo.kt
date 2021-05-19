@@ -1,6 +1,8 @@
 package com.example.shop.repo
 
 import com.example.shop.api.ApiInterfaceResult
+import com.example.shop.model.StringResponseModel
+import com.example.shop.model.UserModel
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -15,9 +17,12 @@ class UserRepo @Inject constructor(val apiInterfaceResult: ApiInterfaceResult){
         nationalID: String,
         email: String,
         phone: String
-    ): Response<String>
+    ): Response<StringResponseModel>
             = apiInterfaceResult.addInfo(id, name, mobile, nationalID, email, phone)
 
 
+    suspend fun getUserInfo(
+        user_id:String
+    ):Response<ArrayList<UserModel>> = apiInterfaceResult.getUserInfo(user_id)
 
 }

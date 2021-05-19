@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shop.model.CheckCartModel
+import com.example.shop.model.StringResponseModel
 import com.example.shop.model.AddToCartResponseModel
 import com.example.shop.model.ShopCartModel
 import com.example.shop.repo.ShopCartRepo
@@ -23,8 +23,8 @@ class ShopCartViewModel @Inject constructor(var repo : ShopCartRepo) : ViewModel
 
     private var cartListLD: MutableLiveData<ArrayList<ShopCartModel>> = MutableLiveData()
     private var manageCartLD: MutableLiveData<AddToCartResponseModel> = MutableLiveData()
-    private var addCartLD: MutableLiveData<CheckCartModel> = MutableLiveData()
-    private var checkCartLD: MutableLiveData<CheckCartModel> = MutableLiveData()
+    private var addCartLD: MutableLiveData<StringResponseModel> = MutableLiveData()
+    private var stringResponseLD: MutableLiveData<StringResponseModel> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
 
@@ -61,7 +61,7 @@ class ShopCartViewModel @Inject constructor(var repo : ShopCartRepo) : ViewModel
             try{
                 val response = repo.manageShopCart(user_id, product_id, order)
                 if (response.isSuccessful && response.body() != null) {
-                    manageCartLD.value = response.body()
+                    manageCartLD.postValue( response.body())
                 } else {
                     Log.e("manageCartVMError", response.errorBody().toString())
                 }
@@ -76,7 +76,7 @@ class ShopCartViewModel @Inject constructor(var repo : ShopCartRepo) : ViewModel
     fun addToShopCart(
         user_id: Int,
         product_id: Int
-    ): MutableLiveData<CheckCartModel> {
+    ): MutableLiveData<StringResponseModel> {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -98,17 +98,22 @@ class ShopCartViewModel @Inject constructor(var repo : ShopCartRepo) : ViewModel
     fun checkShopCart(
         user_id: Int,
         product_id: Int
-    ): MutableLiveData<CheckCartModel> {
+    ): MutableLiveData<StringResponseModel> {
 
-        viewModelScope.launch(Dispatchers.Main) {
-            val response = repo.checkShopCart(user_id, product_id)
-            if (response.isSuccessful && response.body() != null) {
-                checkCartLD.value = response.body()
-            } else {
-                Log.e("checkCartViewModelError", response.errorBody().toString())
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = repo.checkShopCart(user_id, product_id)
+                if (response.isSuccessful && response.body() != null) {
+                    stringResponseLD.postValue(response.body())
+                } else {
+                    Log.e("checkCartViewModelError", response.errorBody().toString())
+                }
+            }catch (e:Exception){
+                e.printStackTrace()
             }
+
         }
-        return checkCartLD
+        return stringResponseLD
     }
 
 
@@ -116,11 +121,16 @@ class ShopCartViewModel @Inject constructor(var repo : ShopCartRepo) : ViewModel
     fun pay(id: String): MutableLiveData<String> {
 
         viewModelScope.launch(Dispatchers.IO) {
-            val response = repo.pay(id)
-            if (response.isSuccessful && response.body() != null) {
-                payResponse.value = response.body()
-            }else{
-                Log.e("payError", response.errorBody().toString())
+            try {
+                val response = repo.pay(id)
+                if (response.isSuccessful && response.body() != null) {
+                    payResponse.postValue(response.body())
+                } else {
+                    Log.e("payError", response.errorBody().toString())
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
         return payResponse

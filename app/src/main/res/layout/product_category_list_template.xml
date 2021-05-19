@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/img_product_favorite"
+                android:id="@+id/img_product"
                 android:layout_width="102dp"
                 android:layout_height="112dp"
                 android:background="@color/white"
@@ -36,7 +36,7 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/txt_product_name_favorite"
+            android:id="@+id/txt_product_name"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/vazir"
@@ -50,7 +50,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/txt_product_price_favorite"
+            android:id="@+id/txt_product_price"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"

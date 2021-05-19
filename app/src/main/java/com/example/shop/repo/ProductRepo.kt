@@ -7,18 +7,17 @@ import io.reactivex.rxjava3.core.Single
 import retrofit2.Response
 import javax.inject.Inject
 
-class ProductRepo @Inject constructor(val apiInterfaceResult: ApiInterfaceResult){
+class ProductRepo @Inject constructor(val apiInterfaceResult: ApiInterfaceResult) {
 
-    suspend fun getCategory(): Response<ArrayList<CategoryModel>>
-            = apiInterfaceResult.getCategory()
-
-
-    fun bestSellers(): Single<ArrayList<ProductModel>>
-            = apiInterfaceResult.bestSellers()
+    suspend fun getCategory(): Response<ArrayList<CategoryModel>> = apiInterfaceResult.getCategory()
 
 
-    fun getOffers(): Single<ArrayList<ProductModel>>
-            = apiInterfaceResult.getOffers()
+    fun bestSellers(): Single<ArrayList<ProductModel>> = apiInterfaceResult.bestSellers()
 
+
+    fun getOffers(): Single<ArrayList<ProductModel>> = apiInterfaceResult.getOffers()
+
+    fun getProductsCategory(category: String): Single<ArrayList<ProductModel>> =
+        apiInterfaceResult.getProductsCategory(category)
 
 }

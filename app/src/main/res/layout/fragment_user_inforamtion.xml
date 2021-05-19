@@ -43,7 +43,8 @@
                     android:fontFamily="@font/vazir_medium"
                     android:gravity="center_vertical|right"
                     android:hint="نام"
-                    android:paddingRight="10dp"></EditText>
+                    android:paddingRight="10dp"
+                    android:textSize="16sp"></EditText>
 
                 <EditText
                     android:id="@+id/edt_mobile"
@@ -57,7 +58,8 @@
                     android:gravity="center_vertical|right"
                     android:hint="شماره تماس"
                     android:paddingRight="10dp"
-                    android:textColor="@color/text_color"></EditText>
+                    android:textColor="@color/text_color"
+                    android:textSize="16sp"></EditText>
 
                 <EditText
                     android:id="@+id/edt_nationalID"
@@ -71,7 +73,8 @@
                     android:gravity="center_vertical|right"
                     android:hint="کد ملی "
                     android:paddingRight="10dp"
-                    android:textColor="@color/text_color"></EditText>
+                    android:textColor="@color/text_color"
+                    android:textSize="16sp"></EditText>
 
                 <EditText
                     android:id="@+id/edt_phone"
@@ -85,7 +88,8 @@
                     android:gravity="center_vertical|right"
                     android:hint="شماره تماس ثابت"
                     android:paddingRight="10dp"
-                    android:textColor="@color/text_color"></EditText>
+                    android:textColor="@color/text_color"
+                    android:textSize="16sp"></EditText>
 
                 <EditText
                     android:id="@+id/edt_email"
@@ -99,7 +103,8 @@
                     android:gravity="center_vertical|right"
                     android:hint="ایمیل"
                     android:paddingRight="10dp"
-                    android:textColor="@color/text_color"></EditText>
+                    android:textColor="@color/text_color"
+                    android:textSize="16sp"></EditText>
 
                 <EditText
                     android:id="@+id/edt_password"
@@ -113,7 +118,8 @@
                     android:gravity="center_vertical|right"
                     android:hint="رمز عبور"
                     android:paddingRight="10dp"
-                    android:textColor="@color/text_color"></EditText>
+                    android:textColor="@color/text_color"
+                    android:textSize="16sp"></EditText>
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_add_info"
                     android:layout_width="match_parent"

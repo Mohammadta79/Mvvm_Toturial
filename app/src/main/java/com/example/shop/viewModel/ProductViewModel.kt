@@ -19,30 +19,32 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class ProductViewModel @Inject constructor(var repo: ProductRepo): ViewModel() {
+class ProductViewModel @Inject constructor(var repo: ProductRepo) : ViewModel() {
 
-    private var categorymutableLiveData: MutableLiveData<ArrayList<CategoryModel>> = MutableLiveData()
-    private var mostCellmutableLiveData: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
-    private var offersmutableLiveData: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
+    private var categoryLD: MutableLiveData<ArrayList<CategoryModel>> = MutableLiveData()
+    private var bestSellersLD: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
+    private var offersLD: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
+    private var productsCategoryLD: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
+
 
     fun getCategory(): MutableLiveData<ArrayList<CategoryModel>> {
 
-    viewModelScope.launch(Dispatchers.IO){
-        try {
-            val response = repo.getCategory()
-            if  (response.isSuccessful && response.body() != null) {
-                val data = response.body()
-                categorymutableLiveData.postValue(data)
-            } else {
-                Log.e("categoryError", response.toString())
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = repo.getCategory()
+                if (response.isSuccessful && response.body() != null) {
+                    val data = response.body()
+                    categoryLD.postValue(data)
+                } else {
+                    Log.e("categoryError", response.toString())
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-        }catch (e:Exception){
-           e.printStackTrace()
         }
+        return categoryLD
     }
-    return categorymutableLiveData
-}
 
     fun bestSellers(): MutableLiveData<ArrayList<ProductModel>> {
 
@@ -52,7 +54,7 @@ class ProductViewModel @Inject constructor(var repo: ProductRepo): ViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<List<ProductModel?>?>() {
                     override fun onSuccess(t: List<ProductModel?>?) {
-                        mostCellmutableLiveData.value = t as ArrayList<ProductModel>?
+                        bestSellersLD.value = t as ArrayList<ProductModel>?
                     }
 
                     override fun onError(e: @io.reactivex.rxjava3.annotations.NonNull Throwable?) {
@@ -61,7 +63,7 @@ class ProductViewModel @Inject constructor(var repo: ProductRepo): ViewModel() {
 
                 })
         )
-        return mostCellmutableLiveData
+        return bestSellersLD
     }
 
     fun getOffers(): MutableLiveData<ArrayList<ProductModel>> {
@@ -72,7 +74,7 @@ class ProductViewModel @Inject constructor(var repo: ProductRepo): ViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<List<ProductModel?>?>() {
                     override fun onSuccess(t: List<ProductModel?>?) {
-                        offersmutableLiveData.value = t as ArrayList<ProductModel>?
+                        offersLD.value = t as ArrayList<ProductModel>?
                     }
 
                     override fun onError(e: @io.reactivex.rxjava3.annotations.NonNull Throwable?) {
@@ -81,8 +83,29 @@ class ProductViewModel @Inject constructor(var repo: ProductRepo): ViewModel() {
 
                 })
         )
-        return offersmutableLiveData
+        return offersLD
     }
+
+    fun getProductsCategory(category: String): MutableLiveData<ArrayList<ProductModel>> {
+
+        compositeDisposable.add(
+            repo.getProductsCategory(category)
+            !!.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<List<ProductModel?>?>() {
+                    override fun onSuccess(t: List<ProductModel?>?) {
+                        productsCategoryLD.value = t as ArrayList<ProductModel>?
+                    }
+
+                    override fun onError(e: @io.reactivex.rxjava3.annotations.NonNull Throwable?) {
+                        Log.e("getMostCellError", e.toString())
+                    }
+
+                })
+        )
+        return productsCategoryLD
+    }
+
 
     override fun onCleared() {
         compositeDisposable.clear()

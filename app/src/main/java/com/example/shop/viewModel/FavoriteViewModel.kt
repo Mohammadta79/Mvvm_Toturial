@@ -49,13 +49,18 @@ class FavoriteViewModel @Inject constructor(var repo: FavoriteRepo) : ViewModel(
 
 
     fun setFav(id: String, fav: Int): MutableLiveData<String> {
-        viewModelScope.launch(Dispatchers.Main) {
-            val response = repo.setFavValue(id, fav)
-            if (response.isSuccessful && response.body() != null) {
-                favLD.value = response.body()
-            } else {
-                Log.e("setFavError", response.errorBody().toString())
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = repo.setFavValue(id, fav)
+                if (response.isSuccessful && response.body() != null) {
+                    favLD.value = response.body()
+                } else {
+                    Log.e("setFavError", response.errorBody().toString())
+                }
+            }catch (e:Exception){
+                e.printStackTrace()
             }
+
         }
         return favLD
     }

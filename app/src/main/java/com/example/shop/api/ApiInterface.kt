@@ -34,6 +34,9 @@ interface ApiInterface {
     @GET("getOrders.php")
     fun getOrders(@Query("id") id: String): Single<ArrayList<OrdersModel>>
 
+    @GET("getProductsCategory.php")
+    fun getProductsCategory(@Query("category") category: String): Single<ArrayList<ProductModel>>
+
     @FormUrlEncoded
     @POST("login.php")
     suspend fun login(
@@ -51,17 +54,9 @@ interface ApiInterface {
 
     @FormUrlEncoded
     @POST("addAddress.php")
-    suspend fun AddAddress(
-        @Field("id") id: String,
-        @Field("province") province: String,
-        @Field("town") town: String,
-        @Field("address") address: String,
-        @Field("street") street: String,
-        @Field("postal_code") postalCode: String,
-        @Field("plaque") plaque: String,
-        @Field("reciver_name") reciverName: String,
-        @Field("reciver_phone") reciverPhone: String
-    ): Response<String>
+    fun AddAddress(
+        @FieldMap params: HashMap<String, String>
+    ): Single<StringResponseModel>
 
     @FormUrlEncoded
     @POST("addInfo.php")
@@ -72,7 +67,7 @@ interface ApiInterface {
         @Field("nationalID") nationalID: String,
         @Field("email") email: String,
         @Field("phone") phone: String
-    ): Response<String>
+    ): Response<StringResponseModel>
 
     @FormUrlEncoded
     @POST("setFav.php")
@@ -95,18 +90,26 @@ interface ApiInterface {
         @Field("user_id") user_id: Int,
         @Field("product_id") product_id: Int
 
-    ): Response<CheckCartModel>
+    ): Response<StringResponseModel>
 
     @FormUrlEncoded
     @POST("checkShopCart.php")
     suspend fun checkShopCart(
         @Field("user_id") user_id: Int,
         @Field("product_id") product_id: Int
-    ): Response<CheckCartModel>
+    ): Response<StringResponseModel>
+
+    @FormUrlEncoded
+    @POST("getUserInfo.php")
+    suspend fun getUserInfo(
+        @Field("user_id") user_id: String
+    ):Response<ArrayList<UserModel>>
 
     @FormUrlEncoded
     @POST("pay.php")
     suspend fun pay(
         @Field("user_id") user_id: String
     ): Response<String>
+
+
 }

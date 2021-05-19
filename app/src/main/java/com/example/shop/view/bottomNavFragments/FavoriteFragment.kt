@@ -1,6 +1,7 @@
 package com.example.shop.view.bottomNavFragments
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -24,7 +25,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class FavoriteFragment : Fragment(), onProductListItemClickListener {
 
     private lateinit var binding: FragmentFavoriteBinding
-    private  val favoriteViewModel by viewModels<FavoriteViewModel>()
+    private val favoriteViewModel by viewModels<FavoriteViewModel>()
+    var sharedPref: SharedPreferences? = null
+    private lateinit var user_id: String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,9 +43,11 @@ class FavoriteFragment : Fragment(), onProductListItemClickListener {
 
     private fun initViews() {
 
-        val sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
-        if (sharedPref!!.getString("id", null) != null){
-            favoriteViewModel.getFavoriteLiveData(sharedPref!!.getString("id", null))
+        sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
+        user_id = sharedPref!!.getString("id", null).toString()
+
+        user_id.let {
+            favoriteViewModel.getFavoriteLiveData(it)
                 .observe(requireActivity()) {
                     binding.favoriteRecyclerview.apply {
                         layoutManager =
@@ -61,7 +66,6 @@ class FavoriteFragment : Fragment(), onProductListItemClickListener {
         }
 
 
-
     }
 
     override fun onProductListItemClick(productModel: ProductModel) {
@@ -73,11 +77,9 @@ class FavoriteFragment : Fragment(), onProductListItemClickListener {
         bundle.putString("desc", productModel.describtion)
         bundle.putString("weight", productModel.weight)
         bundle.putString("image", productModel.image)
-        bundle.putString("startPoint", "favorite")
         bundle.putInt("reminder", productModel.reminder)
         findNavController().navigate(R.id.action_favoriteFragment_to_detailsProductFragment, bundle)
     }
-
 
 
 }

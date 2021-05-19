@@ -81,7 +81,6 @@ class ShopCartFragment : Fragment(), onShopCartItemCLickListener, View.OnClickLi
         bundle.putString("image", shopCartModel.image)
         bundle.putInt("favorite", shopCartModel.favorite)
         bundle.putInt("reminder", shopCartModel.reminder)
-        bundle.putString("startPoint", "shopCart")
         findNavController().navigate(R.id.action_shopCartFragment_to_detailsProductFragment, bundle)
     }
 

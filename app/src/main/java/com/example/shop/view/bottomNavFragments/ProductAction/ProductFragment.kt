@@ -112,13 +112,12 @@ class ProductFragment : Fragment(), onProductListItemClickListener, onCategoryLi
         bundle.putString("weight", productModel.weight)
         bundle.putString("image", productModel.image)
         bundle.putInt("reminder", productModel.reminder)
-        bundle.putString("startPoint", "home")
         findNavController().navigate(R.id.action_homeFragment_to_detailsProductFragment, bundle)
     }
 
     override fun onCategoryClick(categoryModel: CategoryModel) {
         var bundle = Bundle()
-        bundle.putString("category_name", categoryModel.name)
+        bundle.putString("category", categoryModel.name)
         findNavController().navigate(R.id.action_homeFragment_to_productCategoryFragment,bundle)
     }
 

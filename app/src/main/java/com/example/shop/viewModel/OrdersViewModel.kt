@@ -41,6 +41,7 @@ class OrdersViewModel @Inject constructor(var repo: OrdersRepo) : ViewModel() {
 
 
     override fun onCleared() {
+        compositeDisposable.clear()
         super.onCleared()
     }
 }

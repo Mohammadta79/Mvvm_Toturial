@@ -88,7 +88,6 @@ class CompletePurchaseFragment : Fragment(), onShopCartItemCLickListener, View.O
         bundle.putString("image", shopCartModel.image)
         bundle.putInt("favorite", shopCartModel.favorite)
         bundle.putInt("reminder", shopCartModel.reminder)
-        bundle.putString("startPoint", "shopCart")
         findNavController().navigate(
             R.id.action_completePurchaseFragment_to_detailsProductFragment,
             bundle

@@ -29,7 +29,6 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
     private lateinit var desc: String
     private lateinit var category: String
     private lateinit var weight: String
-    private lateinit var startPoint: String
     private lateinit var image: String
     private var reminder: Int = 0
     private lateinit var product_id: String
@@ -44,7 +43,6 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
             price = it.getString("price", null)
             desc = it.getString("desc", null)
             category = it.getString("category", null)
-            startPoint = it.getString("startPoint", null)
             weight = it.getString("weight", null)
             image = it.getString("image", null)
             reminder = it.getInt("reminder", 0)

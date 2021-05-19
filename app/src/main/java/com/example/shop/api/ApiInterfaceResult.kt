@@ -31,6 +31,9 @@ class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
 
     fun getOrders(id: String): Single<ArrayList<OrdersModel>> = apiInterface.getOrders(id)
 
+
+    fun getProductsCategory(category:String):Single<ArrayList<ProductModel>> = apiInterface.getProductsCategory(category)
+
     suspend fun login(mobile: String, password: String): Response<AuthResponseModel> =
         apiInterface!!.login(mobile, password)
 
@@ -43,26 +46,10 @@ class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
         apiInterface!!.register(mobile, password, email)
 
 
-    suspend fun addAddress(
-        id: String,
-        province: String,
-        town: String,
-        address: String,
-        street: String,
-        postalCode: String,
-        plaque: String,
-        reciverName: String,
-        reciverPhone: String
-    ): Response<String> = apiInterface.AddAddress(
-        id,
-        province,
-        town,
-        address,
-        street,
-        postalCode,
-        plaque,
-        reciverName,
-        reciverPhone
+     fun addAddress(
+       params:HashMap<String,String>
+    ): Single<StringResponseModel> = apiInterface.AddAddress(
+       params
     )
 
 
@@ -73,7 +60,7 @@ class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
         nationalID: String,
         email: String,
         phone: String
-    ): Response<String> =
+    ): Response<StringResponseModel> =
         apiInterface.AddInfo(id, name, mobile, nationalID, email, phone)
 
 
@@ -90,13 +77,17 @@ class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
     suspend fun addToShopCart(
         user_id: Int,
         product_id: Int
-    ): Response<CheckCartModel> = apiInterface.addToShopCart(user_id, product_id)
+    ): Response<StringResponseModel> = apiInterface.addToShopCart(user_id, product_id)
 
     suspend fun checkShopCart(
         user_id: Int,
         product_id: Int
-    ): Response<CheckCartModel> = apiInterface.checkShopCart(user_id, product_id)
+    ): Response<StringResponseModel> = apiInterface.checkShopCart(user_id, product_id)
 
-    suspend fun pay(id: String): Response<String> = apiInterface!!.pay(id)
+    suspend fun getUserInfo(
+        user_id: String
+    ):Response<ArrayList<UserModel>> = apiInterface.getUserInfo(user_id)
+
+    suspend fun pay(id: String): Response<String> = apiInterface.pay(id)
 
 }
