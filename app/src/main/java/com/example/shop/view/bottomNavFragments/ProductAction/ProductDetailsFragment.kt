@@ -3,7 +3,6 @@ package com.example.shop.view.bottomNavFragments.ProductAction
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,7 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.example.shop.R
 import com.example.shop.databinding.FragmentDetailsProductBinding
-import com.example.shop.viewModel.ProductViewModel
+import com.example.shop.viewModel.FavoriteViewModel
 import com.example.shop.viewModel.ShopCartViewModel
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,10 +29,11 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
     private lateinit var category: String
     private lateinit var weight: String
     private lateinit var image: String
+    private lateinit var favoriteReqParams: HashMap<String, String>
     private var reminder: Int = 0
     private lateinit var product_id: String
     private lateinit var user_id: String
-    private val productViewModel by viewModels<ProductViewModel>()
+    private val favoriteViewModel by viewModels<FavoriteViewModel>()
     private val shopCartViewModel by viewModels<ShopCartViewModel>()
     private var sharedPref: SharedPreferences? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,36 +85,39 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
                 shopCartViewModel.addToShopCart(user_id.toInt(), product_id.toInt())
                     .observe(viewLifecycleOwner) {
 
-                            when (it.status) {
-                                "ok" -> {
-                                    binding.btnAddToCart.visibility = View.GONE
-                                    binding.txtGoToShopCart.visibility = View.VISIBLE
-                                }
-                                else -> {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "خطایی رخ داده است",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                    binding.btnAddToCart.visibility = View.VISIBLE
-                                    binding.txtGoToShopCart.visibility = View.GONE
-                                }
+                        when (it.status) {
+                            "ok" -> {
+                                binding.btnAddToCart.visibility = View.GONE
+                                binding.txtGoToShopCart.visibility = View.VISIBLE
                             }
+                            else -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "خطایی رخ داده است",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                binding.btnAddToCart.visibility = View.VISIBLE
+                                binding.txtGoToShopCart.visibility = View.GONE
+                            }
+                        }
 
                     }
 
 
             }
-//            binding.imgFav.id -> {
-//                val res = productViewModel.setFav(id, favorite)
-//                res.observe(requireActivity()) {
-//                    if (it == "like") {
-//                        binding.imgFav.setImageResource(R.drawable.ic_like)
-//                    } else {
-//                        binding.imgFav.setImageResource(R.drawable.ic_disslike)
-//                    }
-//                }
-//            }
+            binding.imgFav.id -> {
+                favoriteViewModel.setFav(favoriteReqParams)
+                    .observe(requireActivity()) {
+                        when (it.status) {
+                            "like" -> {
+                                binding.imgFav.setImageResource(R.drawable.ic_like)
+                            }
+                            "dislike" -> {
+                                binding.imgFav.setImageResource(R.drawable.ic_disslike)
+                            }
+                        }
+                    }
+            }
 
             binding.txtGoToShopCart.id -> {
                 findNavController().navigate(R.id.action_detailsProductFragment_to_shopCartFragment)
@@ -130,6 +133,8 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
     }
 
     private fun initViews() {
+
+
         sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
         sharedPref!!.getString("id", null)
             ?.let {
@@ -139,14 +144,21 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
             binding.imgFav.visibility = View.GONE
         }
 
-//        when (favorite) {
-//            0 -> {
-//                binding.imgFav.setImageResource(R.drawable.ic_disslike)
-//            }
-//            1 -> {
-//                binding.imgFav.setImageResource(R.drawable.ic_like)
-//            }
-//        }
+        favoriteReqParams = HashMap()
+        favoriteReqParams["product_id"] = product_id
+        favoriteReqParams["user_id"] = user_id
+
+        favoriteViewModel.getFav(favoriteReqParams).observe(viewLifecycleOwner) {
+            when (it.status) {
+                "1" -> {
+                    binding.imgFav.setImageResource(R.drawable.ic_like)
+                }
+                else -> {
+                    binding.imgFav.setImageResource(R.drawable.ic_disslike)
+                }
+            }
+        }
+
         if (reminder == 0) {
             binding.btnAddToCart.text = "اتمام موجودی!"
             binding.btnAddToCart.isEnabled = false

@@ -4,10 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shop.model.CartPriceModel
-import com.example.shop.model.StringResponseModel
-import com.example.shop.model.ManageCartResponseModel
-import com.example.shop.model.ShopCartModel
+import com.example.shop.model.*
 import com.example.shop.repo.ShopCartRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -23,12 +20,13 @@ class ShopCartViewModel @Inject constructor(var repo: ShopCartRepo) : ViewModel(
 
 
     private var cartListLD: MutableLiveData<ArrayList<ShopCartModel>> = MutableLiveData()
-    private var manageCartLD: MutableLiveData<ManageCartResponseModel> = MutableLiveData()
+    private var manageShopCartLD: MutableLiveData<ManageShopCartResponseModel> = MutableLiveData()
     private var addCartLD: MutableLiveData<StringResponseModel> = MutableLiveData()
     private var stringResponseLD: MutableLiveData<StringResponseModel> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private var payResponse: MutableLiveData<String> = MutableLiveData()
     private var cartPrice: MutableLiveData<CartPriceModel> = MutableLiveData()
+    private var deleteCartLD: MutableLiveData<StringResponseModel> = MutableLiveData()
 
     fun getShopCartLiveData(id: String?): MutableLiveData<ArrayList<ShopCartModel>> {
 
@@ -57,13 +55,13 @@ class ShopCartViewModel @Inject constructor(var repo: ShopCartRepo) : ViewModel(
         user_id: String,
         product_id: String,
         order: String
-    ):MutableLiveData<ManageCartResponseModel> {
+    ):MutableLiveData<ManageShopCartResponseModel> {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = repo.manageShopCart(user_id, product_id, order)
                 if (response.isSuccessful && response.body() != null) {
-                    manageCartLD.postValue(response.body())
+                    manageShopCartLD.postValue(response.body())
                 } else {
                     Log.e("manageCartVMError", response.errorBody().toString())
                 }
@@ -72,7 +70,7 @@ class ShopCartViewModel @Inject constructor(var repo: ShopCartRepo) : ViewModel(
             }
 
         }
-return manageCartLD
+return manageShopCartLD
     }
 
     fun addToShopCart(
@@ -153,12 +151,28 @@ return manageCartLD
         return cartPrice
     }
 
+    fun deleteCart(id: String): MutableLiveData<StringResponseModel> {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = repo.deleteCart(id)
+                if (response.isSuccessful && response.body() != null) {
+                    deleteCartLD.postValue(response.body())
+                } else {
+                    Log.e("deleteCartError", response.errorBody().toString())
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        return deleteCartLD
+    }
+
+
 
 
 
     override fun onCleared() {
         compositeDisposable.clear()
-        manageCartLD.value = null
         super.onCleared()
     }
 

@@ -107,6 +107,7 @@ class ProductViewModel @Inject constructor(var repo: ProductRepo) : ViewModel() 
     }
 
 
+
     override fun onCleared() {
         compositeDisposable.clear()
         super.onCleared()

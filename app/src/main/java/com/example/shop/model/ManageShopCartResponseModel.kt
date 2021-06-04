@@ -1,9 +1,8 @@
 package com.example.shop.model
 
-data class ManageCartResponseModel(
+data class ManageShopCartResponseModel(
     val count:String,
     val price: String,
     val status: String,
     val cart_price:String
-
 )

@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shop.InterFaces.onShopCartItemCLickListener
 import com.example.shop.R
@@ -16,7 +16,8 @@ import com.squareup.picasso.Picasso
 class ShopCartProductsAdapter(
     val context: Context,
     val list: ArrayList<ShopCartModel>,
-    val lisener: onShopCartItemCLickListener
+    val lisener: onShopCartItemCLickListener,
+    val lifecycleOwner: LifecycleOwner
 ) :
     RecyclerView.Adapter<ShopCartProductsAdapter.ShopCartProductsHolder>() {
 
@@ -55,22 +56,53 @@ class ShopCartProductsAdapter(
             binding.txtNumOfCart.text = data.count.toString()
             binding.txtCategoryCart.text = data.category
             itemView.setOnClickListener { lisener.onClick(data) }
-
             if (data.count > 1) {
-                binding.imgMinusCart.setImageResource(R.drawable.ic_mines)
+                binding.imgMinusCart.visibility = View.VISIBLE
             } else {
-                binding.imgMinusCart.setImageResource(R.drawable.ic_delete)
+                binding.imgMinusCart.visibility = View.INVISIBLE
             }
+
 
 
             binding.imgAddCart.setOnClickListener {
-                binding.txtNumOfCart.text = lisener.onChangeCount("add", data.idproduct)["count"]
-                binding.txtCartPrice.text = lisener.onChangeCount("add", data.idproduct)["price"]
+
+                lisener.onChangeCount("add", data.idproduct).observe(lifecycleOwner) {
+                    binding.txtNumOfCart.text = it.count
+                    binding.txtCartPrice.text = it.price
+                    data.count = it.count.toInt()
+                    data.price = it.price
+                    if (data.count > 1) {
+                        binding.imgMinusCart.visibility = View.VISIBLE
+                    } else {
+                        binding.imgMinusCart.visibility = View.INVISIBLE
+                    }
+                }
+
             }
             binding.imgMinusCart.setOnClickListener {
-                binding.txtNumOfCart.text = lisener.onChangeCount("minus", data.idproduct)["count"]
-                binding.txtCartPrice.text = lisener.onChangeCount("minus", data.idproduct)["price"]
+                when (data.count) {
+                    1 -> {
+                        lisener.onChangeCount("delete", data.idproduct).observe(lifecycleOwner) {
+                            deleteItem(data.idproduct.toInt())
+                        }
+                    }
+                    else -> {
+                        lisener.onChangeCount("minus", data.idproduct).observe(lifecycleOwner) {
+                            if (data.count > 1) {
+                                binding.imgMinusCart.visibility = View.VISIBLE
+                            } else {
+                                binding.imgMinusCart.visibility = View.INVISIBLE
+                            }
+                            binding.txtNumOfCart.text = it.count
+                            binding.txtCartPrice.text = it.price
+                        }
+                    }
+                }
             }
+            binding.icDeleteCart.setOnClickListener {
+                lisener.deleteCart(data.idproduct)
+            }
+
         }
     }
 }

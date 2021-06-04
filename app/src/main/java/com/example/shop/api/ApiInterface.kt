@@ -27,9 +27,9 @@ interface ApiInterface {
     @GET("getAddress.php")
     fun getAddress(@Query("id") id: String?): Single<ArrayList<AddressModel>>
 
-
-    @GET("getCurrentAddress.php")
-    fun getCurrentAddress(@Query("id") id: String): Single<AddressModel>
+    @FormUrlEncoded
+    @POST("getCurrentAddress.php")
+    fun getCurrentAddress(@Field("user_id") id: String): Single<AddressModel>
 
     @GET("getOrders.php")
     fun getOrders(@Query("id") id: String): Single<ArrayList<OrdersModel>>
@@ -73,17 +73,20 @@ interface ApiInterface {
     @FormUrlEncoded
     @POST("setFav.php")
     suspend fun setFavValue(
-        @Field("id") id: String,
-        @Field("fav_value") favValue: Int
-    ): Response<String>
+        @FieldMap params: HashMap<String, String>
+    ): Response<StringResponseModel>
 
+
+    @FormUrlEncoded
+    @POST("getFav.php")
+    suspend fun getFavValue(@FieldMap params: HashMap<String, String>): Response<StringResponseModel>
 
     @GET("manageShopCart.php")
     suspend fun manageShopCart(
         @Query("user_id") user_id: String,
         @Query("product_id") product_id: String,
         @Query("order") order: String
-    ): Response<ManageCartResponseModel>
+    ): Response<ManageShopCartResponseModel>
 
     @FormUrlEncoded
     @POST("addToShopCart.php")
@@ -104,7 +107,7 @@ interface ApiInterface {
     @POST("getUserInfo.php")
     suspend fun getUserInfo(
         @Field("user_id") user_id: String
-    ):Response<ArrayList<UserModel>>
+    ): Response<ArrayList<UserModel>>
 
     @FormUrlEncoded
     @POST("pay.php")
@@ -115,7 +118,12 @@ interface ApiInterface {
     @FormUrlEncoded
     @POST("getCartPrice.php")
     suspend fun getCartPrice(
-        @Field("id") id:String
-    ):Response<CartPriceModel>
+        @Field("id") id: String
+    ): Response<CartPriceModel>
 
+    @FormUrlEncoded
+    @POST("deleteCart.php")
+    suspend fun deleteCart(
+        @Field("product_id") product_id: String
+    ): Response<StringResponseModel>
 }

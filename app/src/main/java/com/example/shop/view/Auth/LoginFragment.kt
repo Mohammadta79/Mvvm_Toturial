@@ -45,7 +45,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
                         binding.edtPhoneNumber.text.toString(),
                         binding.edtPassword.text.toString()
                     ).observe(requireActivity()) {
-                        if (it != null && it.status == "ok") {
+                        if (it.status == "ok") {
                             val sharedPref =
                                 activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
                             sharedPref!!.edit().apply {

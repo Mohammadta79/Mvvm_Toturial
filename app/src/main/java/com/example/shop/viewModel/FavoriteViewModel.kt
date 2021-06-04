@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.example.shop.model.ProductModel
+import com.example.shop.model.StringResponseModel
 import com.example.shop.repo.FavoriteRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -22,7 +23,8 @@ class FavoriteViewModel @Inject constructor(var repo: FavoriteRepo) : ViewModel(
 
     private var favoriteLD: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private var favLD: MutableLiveData<String> = MutableLiveData()
+    private var setFavLD: MutableLiveData<StringResponseModel> = MutableLiveData()
+    private var getFavLD: MutableLiveData<StringResponseModel> = MutableLiveData()
 
 
     fun getFavoriteLiveData(id: String?): MutableLiveData<ArrayList<ProductModel>> {
@@ -48,22 +50,40 @@ class FavoriteViewModel @Inject constructor(var repo: FavoriteRepo) : ViewModel(
     }
 
 
-    fun setFav(id: String, fav: Int): MutableLiveData<String> {
+    fun setFav(params: HashMap<String, String>): MutableLiveData<StringResponseModel> {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = repo.setFavValue(id, fav)
+                val response = repo.setFavValue(params)
                 if (response.isSuccessful && response.body() != null) {
-                    favLD.value = response.body()
+                  setFavLD.postValue(response.body())
                 } else {
                     Log.e("setFavError", response.errorBody().toString())
                 }
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
 
         }
-        return favLD
+        return setFavLD
     }
+
+    fun getFav(params: HashMap<String, String>): MutableLiveData<StringResponseModel> {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = repo.getFavValue(params)
+                if (response.isSuccessful && response.body() != null) {
+                  getFavLD.postValue(response.body())
+                } else {
+                    Log.e("setFavError", response.errorBody().toString())
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+        }
+        return getFavLD
+    }
+
 
 
     override fun onCleared() {

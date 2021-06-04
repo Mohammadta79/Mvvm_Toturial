@@ -1,10 +1,7 @@
 package com.example.shop.repo
 
 import com.example.shop.api.ApiInterfaceResult
-import com.example.shop.model.CartPriceModel
-import com.example.shop.model.ManageCartResponseModel
-import com.example.shop.model.StringResponseModel
-import com.example.shop.model.ShopCartModel
+import com.example.shop.model.*
 import io.reactivex.rxjava3.core.Single
 import retrofit2.Response
 import javax.inject.Inject
@@ -17,7 +14,7 @@ class ShopCartRepo @Inject constructor(val apiInterfaceResult: ApiInterfaceResul
         user_id: String,
         product_id: String,
         order: String
-    ): Response<ManageCartResponseModel> =
+    ): Response<ManageShopCartResponseModel> =
         apiInterfaceResult.manageShopCart(user_id, product_id, order)
 
 
@@ -37,4 +34,6 @@ class ShopCartRepo @Inject constructor(val apiInterfaceResult: ApiInterfaceResul
 
     suspend fun getCartPrice(id: String): Response<CartPriceModel> =
         apiInterfaceResult.getCartPrice(id)
+
+    suspend fun deleteCart(product_id: String): Response<StringResponseModel> = apiInterfaceResult.deleteCart(product_id)
 }

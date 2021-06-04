@@ -1,8 +1,10 @@
 package com.example.shop.api
 
+import androidx.annotation.StringRes
 import com.example.shop.model.*
 import io.reactivex.rxjava3.core.Single
 import retrofit2.Response
+import retrofit2.http.FieldMap
 import javax.inject.Inject
 
 class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
@@ -65,15 +67,18 @@ class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
         apiInterface.AddInfo(id, name, mobile, nationalID, email, phone,password)
 
 
-    suspend fun setFavValue(id: String, fav: Int): Response<String> =
-        apiInterface!!.setFavValue(id, fav)
+    suspend fun setFavValue(params: HashMap<String, String>): Response<StringResponseModel> =
+        apiInterface.setFavValue(params)
+
+    suspend fun getFavValue(params: HashMap<String, String>): Response<StringResponseModel> =
+        apiInterface.getFavValue(params)
 
 
     suspend fun manageShopCart(
         user_id: String,
         product_id: String,
         order: String
-    ): Response<ManageCartResponseModel> = apiInterface.manageShopCart(user_id, product_id, order)
+    ): Response<ManageShopCartResponseModel> = apiInterface.manageShopCart(user_id, product_id, order)
 
     suspend fun addToShopCart(
         user_id: Int,
@@ -92,4 +97,6 @@ class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
     suspend fun pay(id: String): Response<String> = apiInterface.pay(id)
 
     suspend fun getCartPrice(id:String):Response<CartPriceModel> = apiInterface.getCartPrice(id)
+
+    suspend fun deleteCart(product_id: String): Response<StringResponseModel> = apiInterface.deleteCart(product_id)
 }

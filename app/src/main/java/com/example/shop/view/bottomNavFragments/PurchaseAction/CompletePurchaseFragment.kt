@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,7 @@ import com.example.shop.InterFaces.onShopCartItemCLickListener
 import com.example.shop.R
 import com.example.shop.adapter.CompletePurchaseProductsAdapter
 import com.example.shop.databinding.FragmentCompletePurchaseBinding
+import com.example.shop.model.ManageShopCartResponseModel
 import com.example.shop.model.ShopCartModel
 import com.example.shop.viewModel.AddressViewModel
 import com.example.shop.viewModel.ShopCartViewModel
@@ -98,7 +100,11 @@ class CompletePurchaseFragment : Fragment(), onShopCartItemCLickListener, View.O
         binding.btnPay.setOnClickListener(this)
     }
 
-    override fun onChangeCount(order: String, product_id: String):HashMap<String,String> {
+    override fun onChangeCount(order: String, product_id: String):MutableLiveData<ManageShopCartResponseModel> {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteCart(product_id: String) {
         TODO("Not yet implemented")
     }
 

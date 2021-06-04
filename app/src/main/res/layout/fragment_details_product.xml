@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             android:theme="@style/collapsing_toolbar_product_details_fragment"
-            app:collapsedTitleGravity="right"
+            app:collapsedTitleGravity="center_horizontal"
             app:contentScrim="@color/color_primary"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
           >
@@ -34,7 +34,7 @@
                 android:src="@drawable/ic_disslike"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:padding="4dp"
+                android:padding="10dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_gravity="bottom"></ImageView>
@@ -44,7 +44,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:gravity="right"
+                android:gravity="center"
                 app:layout_collapseMode="pin"></androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>

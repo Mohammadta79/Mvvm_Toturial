@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +17,7 @@ import com.example.shop.InterFaces.onShopCartItemCLickListener
 import com.example.shop.R
 import com.example.shop.adapter.ShopCartProductsAdapter
 import com.example.shop.databinding.FragmentShopCartBinding
-import com.example.shop.model.ManageCartResponseModel
+import com.example.shop.model.ManageShopCartResponseModel
 import com.example.shop.model.ShopCartModel
 import com.example.shop.viewModel.ShopCartViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,9 +26,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class ShopCartFragment : Fragment(), onShopCartItemCLickListener, View.OnClickListener {
     private lateinit var binding: FragmentShopCartBinding
     private val shopCartViewModel by viewModels<ShopCartViewModel>()
-    private lateinit var adapter: ShopCartProductsAdapter
+    private lateinit var shopCartAdapter: ShopCartProductsAdapter
     private var user_id: String? = null
-    private lateinit var map: HashMap<String, String>
+    private lateinit var manageShopCartLD: MutableLiveData<ManageShopCartResponseModel>
     var sharedPref: SharedPreferences? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,45 +50,17 @@ class ShopCartFragment : Fragment(), onShopCartItemCLickListener, View.OnClickLi
         sharedPref!!.getString("id", null).let {
             user_id = it
         }
-        map = HashMap()
 
-        shopCartViewModel.getShopCartLiveData(user_id)
-            .observe(viewLifecycleOwner) {
-                if (it.isNotEmpty()) {
-                    binding.btnGoNext.visibility = View.VISIBLE
-                    binding.shopCartRV.apply {
-                        adapter = ShopCartProductsAdapter(
-                            requireContext(),
-                            it,
-                            this@ShopCartFragment
-                        )
-                        layoutManager =
-                            LinearLayoutManager(
-                                requireContext(),
-                                LinearLayoutManager.VERTICAL,
-                                false
-                            )
+        manageShopCartLD = MutableLiveData()
 
-                    }
-                } else {
-                    binding.txtEmptyCart.visibility = View.VISIBLE
-                }
-
-
-            }
-
-        shopCartViewModel.getCartPrice(user_id.toString())
-            .observe(viewLifecycleOwner) {
-                if (it.price != null) {
-                    binding.txtPrice.text = it.price + " تومان "
-                }
-
-            }
+        getShopCart()
+        getCartPrice()
 
 
     }
 
     override fun onClick(shopCartModel: ShopCartModel) {
+
         var bundle = Bundle()
         bundle.putString("name", shopCartModel.name)
         bundle.putString("id", shopCartModel.idproduct)
@@ -101,26 +74,35 @@ class ShopCartFragment : Fragment(), onShopCartItemCLickListener, View.OnClickLi
         findNavController().navigate(R.id.action_shopCartFragment_to_detailsProductFragment, bundle)
     }
 
-    override fun onChangeCount(order: String, product_id: String): HashMap<String, String> {
+    override fun onChangeCount(
+        order: String,
+        product_id: String
+    ): MutableLiveData<ManageShopCartResponseModel> {
 
 
         shopCartViewModel.manageShopCart(user_id.toString(), product_id, order)
             .observe(viewLifecycleOwner) {
-                if (it.status == "delete") {
-                    adapter.deleteItem(product_id.toInt())
-                } else {
-                    if (it.status == "ok") {
-                        binding.txtPrice.text = it.cart_price
-                        map["count"] = it.count
-                        map["price"] = it.price
-                    } else {
-                        Toast.makeText(requireContext(), "خطا", Toast.LENGTH_SHORT).show()
-                    }
+                binding.txtPrice.text = it.cart_price
+                manageShopCartLD.value = it
+            }
+
+        return manageShopCartLD
+    }
+
+    override fun deleteCart(product_id: String) {
+        shopCartViewModel.deleteCart(product_id).observe(viewLifecycleOwner) {
+            when (it.status) {
+                "ok" -> {
+                    shopCartAdapter.deleteItem(product_id.toInt())
+                    getShopCart()
+                    getCartPrice()
+                }
+                else -> {
+                    Toast.makeText(requireContext(), "خطا", Toast.LENGTH_SHORT).show()
                 }
 
             }
-
-        return map
+        }
     }
 
 
@@ -132,6 +114,46 @@ class ShopCartFragment : Fragment(), onShopCartItemCLickListener, View.OnClickLi
 
     private fun selectedViews() {
         binding.btnGoNext.setOnClickListener(this)
+    }
+
+    private fun getShopCart() {
+        shopCartViewModel.getShopCartLiveData(user_id)
+            .observe(viewLifecycleOwner) {
+                if (it.isNotEmpty()) {
+                    binding.btnGoNext.visibility = View.VISIBLE
+                    shopCartAdapter = ShopCartProductsAdapter(
+                        requireContext(),
+                        it,
+                        this@ShopCartFragment,
+                        viewLifecycleOwner
+                    )
+                    binding.shopCartRV.apply {
+                        adapter = shopCartAdapter
+                        layoutManager =
+                            LinearLayoutManager(
+                                requireContext(),
+                                LinearLayoutManager.VERTICAL,
+                                false
+                            )
+                    }
+                } else {
+                    binding.txtEmptyCart.visibility = View.VISIBLE
+                    binding.btnGoNext.visibility = View.GONE
+                    binding.txtPrice.visibility = View.GONE
+                }
+
+
+            }
+    }
+
+    private fun getCartPrice() {
+        shopCartViewModel.getCartPrice(user_id.toString())
+            .observe(viewLifecycleOwner) {
+                if (it.price != null) {
+                    binding.txtPrice.text = it.price + " تومان "
+                }
+
+            }
     }
 
 }
