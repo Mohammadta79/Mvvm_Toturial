@@ -24,12 +24,13 @@ class UserViewModel @Inject constructor(var repo: UserRepo) : ViewModel() {
         mobile: String,
         nationalID: String,
         email: String,
-        phone: String
+        phone: String,
+        password:String
     ): MutableLiveData<StringResponseModel> {
 
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val response = repo.addInfo(id, name, mobile, nationalID, email, phone)
+                    val response = repo.addInfo(id, name, mobile, nationalID, email, phone,password)
                     if (response.isSuccessful && response.body() != null) {
                         addInfoResponseLD.postValue(response.body())
                     } else {

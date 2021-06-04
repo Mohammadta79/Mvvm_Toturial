@@ -4,8 +4,9 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shop.model.CartPriceModel
 import com.example.shop.model.StringResponseModel
-import com.example.shop.model.AddToCartResponseModel
+import com.example.shop.model.ManageCartResponseModel
 import com.example.shop.model.ShopCartModel
 import com.example.shop.repo.ShopCartRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,15 +19,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ShopCartViewModel @Inject constructor(var repo : ShopCartRepo) : ViewModel() {
+class ShopCartViewModel @Inject constructor(var repo: ShopCartRepo) : ViewModel() {
 
 
     private var cartListLD: MutableLiveData<ArrayList<ShopCartModel>> = MutableLiveData()
-    private var manageCartLD: MutableLiveData<AddToCartResponseModel> = MutableLiveData()
+    private var manageCartLD: MutableLiveData<ManageCartResponseModel> = MutableLiveData()
     private var addCartLD: MutableLiveData<StringResponseModel> = MutableLiveData()
     private var stringResponseLD: MutableLiveData<StringResponseModel> = MutableLiveData()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-
+    private var payResponse: MutableLiveData<String> = MutableLiveData()
+    private var cartPrice: MutableLiveData<CartPriceModel> = MutableLiveData()
 
     fun getShopCartLiveData(id: String?): MutableLiveData<ArrayList<ShopCartModel>> {
 
@@ -55,22 +57,22 @@ class ShopCartViewModel @Inject constructor(var repo : ShopCartRepo) : ViewModel
         user_id: String,
         product_id: String,
         order: String
-    ): MutableLiveData<AddToCartResponseModel> {
+    ):MutableLiveData<ManageCartResponseModel> {
 
-        viewModelScope.launch(Dispatchers.Main) {
-            try{
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
                 val response = repo.manageShopCart(user_id, product_id, order)
                 if (response.isSuccessful && response.body() != null) {
-                    manageCartLD.postValue( response.body())
+                    manageCartLD.postValue(response.body())
                 } else {
                     Log.e("manageCartVMError", response.errorBody().toString())
                 }
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
 
         }
-        return manageCartLD
+return manageCartLD
     }
 
     fun addToShopCart(
@@ -87,8 +89,8 @@ class ShopCartViewModel @Inject constructor(var repo : ShopCartRepo) : ViewModel
                 } else {
                     Log.e("addToCartViewModelError", response.body().toString())
                 }
-            }catch (e:Exception){
-             Log.e("addToCartViewModelEx", e.toString())
+            } catch (e: Exception) {
+                Log.e("addToCartViewModelEx", e.toString())
             }
 
         }
@@ -108,7 +110,7 @@ class ShopCartViewModel @Inject constructor(var repo : ShopCartRepo) : ViewModel
                 } else {
                     Log.e("checkCartViewModelError", response.errorBody().toString())
                 }
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
 
@@ -117,7 +119,6 @@ class ShopCartViewModel @Inject constructor(var repo : ShopCartRepo) : ViewModel
     }
 
 
-    private var payResponse:MutableLiveData<String> = MutableLiveData()
     fun pay(id: String): MutableLiveData<String> {
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -136,11 +137,28 @@ class ShopCartViewModel @Inject constructor(var repo : ShopCartRepo) : ViewModel
         return payResponse
     }
 
+    fun getCartPrice(id: String): MutableLiveData<CartPriceModel> {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = repo.getCartPrice(id)
+                if (response.isSuccessful && response.body() != null) {
+                    cartPrice.postValue(response.body())
+                } else {
+                    Log.e("cartPriceError", response.errorBody().toString())
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        return cartPrice
+    }
+
 
 
 
     override fun onCleared() {
         compositeDisposable.clear()
+        manageCartLD.value = null
         super.onCleared()
     }
 

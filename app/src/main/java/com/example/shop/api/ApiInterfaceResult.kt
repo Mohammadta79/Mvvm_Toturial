@@ -59,9 +59,10 @@ class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
         mobile: String,
         nationalID: String,
         email: String,
-        phone: String
+        phone: String,
+        password: String
     ): Response<StringResponseModel> =
-        apiInterface.AddInfo(id, name, mobile, nationalID, email, phone)
+        apiInterface.AddInfo(id, name, mobile, nationalID, email, phone,password)
 
 
     suspend fun setFavValue(id: String, fav: Int): Response<String> =
@@ -72,7 +73,7 @@ class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
         user_id: String,
         product_id: String,
         order: String
-    ): Response<AddToCartResponseModel> = apiInterface.manageShopCart(product_id, user_id, order)
+    ): Response<ManageCartResponseModel> = apiInterface.manageShopCart(user_id, product_id, order)
 
     suspend fun addToShopCart(
         user_id: Int,
@@ -90,4 +91,5 @@ class ApiInterfaceResult @Inject constructor(var apiInterface: ApiInterface) {
 
     suspend fun pay(id: String): Response<String> = apiInterface.pay(id)
 
+    suspend fun getCartPrice(id:String):Response<CartPriceModel> = apiInterface.getCartPrice(id)
 }

@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_nav_items"
+        android:layoutDirection="rtl"
         ></com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <fragment

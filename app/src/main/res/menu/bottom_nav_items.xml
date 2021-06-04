@@ -17,6 +17,5 @@
         android:id="@+id/userFragment"
         android:title="فروشگاه من"
         android:icon="@drawable/ic_profile">
-
     </item>
 </menu>

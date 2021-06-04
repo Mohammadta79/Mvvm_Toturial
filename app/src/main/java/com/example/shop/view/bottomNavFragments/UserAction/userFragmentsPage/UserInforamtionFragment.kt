@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.shop.R
 import com.example.shop.databinding.FragmentUserInforamtionBinding
 import com.example.shop.viewModel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,8 +21,8 @@ class UserInforamtionFragment : Fragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentUserInforamtionBinding
     private val userViewModel by viewModels<UserViewModel>()
-    private var sharedPref:SharedPreferences? = null
-    private lateinit var user_id : String
+    private var sharedPref: SharedPreferences? = null
+    private lateinit var user_id: String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,32 +42,41 @@ class UserInforamtionFragment : Fragment(), View.OnClickListener {
         when (v!!.id) {
             binding.btnAddInfo.id -> {
                 if (checkInput()) {
-                  user_id.let {
-                       userViewModel.addUserInfo(
+                    user_id.let {
+                        userViewModel.addUserInfo(
                             it,
                             binding.edtName.text.toString(),
                             binding.edtMobile.text.toString(),
                             binding.edtNationalID.text.toString(),
                             binding.edtEmail.text.toString(),
-                            binding.edtPhone.text.toString()
-                        ).observe(viewLifecycleOwner){
-                           when (it.status) {
-                               "ok" -> {
-                                   Toast.makeText(
-                                       requireContext(),
-                                       "اطلاعات با موفقیت ثبت شد",
-                                       Toast.LENGTH_SHORT
-                                   ).show()
-                               }
-                               else -> {
-                                   Toast.makeText(requireContext(), "خطا", Toast.LENGTH_SHORT).show()
-                               }
-                           }
-                       }
+                            binding.edtPhone.text.toString(),
+                            binding.edtPassword.text.toString()
+                        ).observe(viewLifecycleOwner) {
+                            when (it.status) {
+                                "ok" -> {
+                                    sharedPref!!.edit()
+                                        .putString("name", binding.edtName.text.toString()).apply()
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "اطلاعات با موفقیت ثبت شد",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    findNavController().navigate(R.id.action_userInforamtionFragment_to_userFragment)
+                                }
+                                else -> {
+                                    Toast.makeText(requireContext(), "خطا", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            }
+                        }
 
                     }
-                }else{
-                    Toast.makeText(requireContext(),"لطفا تمامی مقادیر را به دقت وارد نمایید",Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "لطفا تمامی مقادیر را به دقت وارد نمایید",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
 
 
@@ -77,10 +88,10 @@ class UserInforamtionFragment : Fragment(), View.OnClickListener {
         binding.btnAddInfo.setOnClickListener(this)
     }
 
-    private fun initViews(){
+    private fun initViews() {
         sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
         user_id = sharedPref!!.getString("id", null).toString()
-        userViewModel.getUserInfo(user_id).observe(viewLifecycleOwner){
+        userViewModel.getUserInfo(user_id).observe(viewLifecycleOwner) {
             binding.edtEmail.setText(it[0].email)
             binding.edtMobile.setText(it[0].mobile)
             binding.edtName.setText(it[0].name)

@@ -34,10 +34,12 @@ class ShopCartProductsAdapter(
     override fun getItemCount(): Int = list.size
 
     fun deleteItem(id: Int) {
+
         list.forEachIndexed { index, _ ->
             if (list[index].idproduct == id.toString()) {
                 list.removeAt(index)
                 notifyItemRemoved(index)
+                notifyDataSetChanged()
             }
         }
     }
@@ -52,29 +54,23 @@ class ShopCartProductsAdapter(
             binding.txtProductNameCart.text = data.name
             binding.txtNumOfCart.text = data.count.toString()
             binding.txtCategoryCart.text = data.category
-            if (data.count == 1) {
-                binding.imgMinesCart.setImageResource(R.drawable.ic_delete)
-            } else {
-                binding.imgMinesCart.setImageResource(R.drawable.ic_mines)
-            }
             itemView.setOnClickListener { lisener.onClick(data) }
 
+            if (data.count > 1) {
+                binding.imgMinusCart.setImageResource(R.drawable.ic_mines)
+            } else {
+                binding.imgMinusCart.setImageResource(R.drawable.ic_delete)
+            }
+
+
             binding.imgAddCart.setOnClickListener {
-                lisener.onChangeCount("add", data.idproduct)
+                binding.txtNumOfCart.text = lisener.onChangeCount("add", data.idproduct)["count"]
+                binding.txtCartPrice.text = lisener.onChangeCount("add", data.idproduct)["price"]
             }
-            binding.imgMinesCart.setOnClickListener {
-                if (binding.imgMinesCart.drawable == AppCompatResources.getDrawable(
-                        context,
-                        R.drawable.ic_delete
-                    )
-
-                ) {
-                    lisener.onChangeCount("delete", data.idproduct)
-                } else {
-                    lisener.onChangeCount("mines", data.idproduct)
-                }
+            binding.imgMinusCart.setOnClickListener {
+                binding.txtNumOfCart.text = lisener.onChangeCount("minus", data.idproduct)["count"]
+                binding.txtCartPrice.text = lisener.onChangeCount("minus", data.idproduct)["price"]
             }
-
         }
     }
 }

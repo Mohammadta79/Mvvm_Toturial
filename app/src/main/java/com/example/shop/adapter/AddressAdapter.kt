@@ -9,7 +9,8 @@ import com.example.shop.R
 import com.example.shop.databinding.AddressFragmentListTemplateBinding
 import com.example.shop.model.AddressModel
 
-class AddressAdapter(
+class
+AddressAdapter(
     val context: Context,
     val list: ArrayList<AddressModel>
 ) : RecyclerView.Adapter<AddressAdapter.AddressViewHolder>() {

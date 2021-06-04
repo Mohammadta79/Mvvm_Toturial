@@ -130,7 +130,13 @@
         android:id="@+id/userInforamtionFragment"
         android:name="com.example.shop.view.bottomNavFragments.UserAction.userFragmentsPage.UserInforamtionFragment"
         android:label="fragment_user_inforamtion"
-        tools:layout="@layout/fragment_user_inforamtion" />
+        tools:layout="@layout/fragment_user_inforamtion" >
+        <action
+            android:id="@+id/action_userInforamtionFragment_to_userFragment"
+            app:destination="@id/userFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+    </fragment>
     <fragment
         android:id="@+id/completePurchaseFragment"
         android:name="com.example.shop.view.bottomNavFragments.PurchaseAction.CompletePurchaseFragment"

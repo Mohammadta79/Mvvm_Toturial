@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
@@ -15,6 +16,7 @@ import com.example.shop.InterFaces.onShopCartItemCLickListener
 import com.example.shop.R
 import com.example.shop.adapter.ShopCartProductsAdapter
 import com.example.shop.databinding.FragmentShopCartBinding
+import com.example.shop.model.ManageCartResponseModel
 import com.example.shop.model.ShopCartModel
 import com.example.shop.viewModel.ShopCartViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,9 +25,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class ShopCartFragment : Fragment(), onShopCartItemCLickListener, View.OnClickListener {
     private lateinit var binding: FragmentShopCartBinding
     private val shopCartViewModel by viewModels<ShopCartViewModel>()
-    private lateinit var shopCartList: ArrayList<ShopCartModel>
     private lateinit var adapter: ShopCartProductsAdapter
-    private var user_id:String? = null
+    private var user_id: String? = null
+    private lateinit var map: HashMap<String, String>
     var sharedPref: SharedPreferences? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,28 +46,43 @@ class ShopCartFragment : Fragment(), onShopCartItemCLickListener, View.OnClickLi
 
     fun initViews() {
         sharedPref = activity?.getSharedPreferences("shp", Context.MODE_PRIVATE)
-        sharedPref!!.getString("id",null).let {
+        sharedPref!!.getString("id", null).let {
             user_id = it
         }
+        map = HashMap()
 
         shopCartViewModel.getShopCartLiveData(user_id)
-                .observe(requireActivity()) {
+            .observe(viewLifecycleOwner) {
+                if (it.isNotEmpty()) {
+                    binding.btnGoNext.visibility = View.VISIBLE
                     binding.shopCartRV.apply {
                         adapter = ShopCartProductsAdapter(
                             requireContext(),
                             it,
-                            this@ShopCartFragment)
+                            this@ShopCartFragment
+                        )
                         layoutManager =
-                            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                            LinearLayoutManager(
+                                requireContext(),
+                                LinearLayoutManager.VERTICAL,
+                                false
+                            )
 
                     }
-                    if (it.isNotEmpty()) {
-                        binding.btnGoNext.visibility = View.VISIBLE
-                    }
+                } else {
+                    binding.txtEmptyCart.visibility = View.VISIBLE
                 }
 
 
+            }
 
+        shopCartViewModel.getCartPrice(user_id.toString())
+            .observe(viewLifecycleOwner) {
+                if (it.price != null) {
+                    binding.txtPrice.text = it.price + " تومان "
+                }
+
+            }
 
 
     }
@@ -84,31 +101,28 @@ class ShopCartFragment : Fragment(), onShopCartItemCLickListener, View.OnClickLi
         findNavController().navigate(R.id.action_shopCartFragment_to_detailsProductFragment, bundle)
     }
 
-    override fun onChangeCount(order: String, id: String) {
-        sharedPref!!.getString("id", null)?.let {
-            val response = shopCartViewModel.manageShopCart(it, id, order)
-            response.observe(requireActivity()) {
-                if (order != "delete") {
-                    shopCartList.forEachIndexed { index, _ ->
-                        if (shopCartList[index].idproduct == id) {
-                            shopCartList[index].count = it.count.toInt()
-                            shopCartList[index].price = it.price
-                           // shopCartList[index].reminder = it.reminder
-                            adapter.notifyDataSetChanged()
-                        }
-                    }
+    override fun onChangeCount(order: String, product_id: String): HashMap<String, String> {
+
+
+        shopCartViewModel.manageShopCart(user_id.toString(), product_id, order)
+            .observe(viewLifecycleOwner) {
+                if (it.status == "delete") {
+                    adapter.deleteItem(product_id.toInt())
                 } else {
                     if (it.status == "ok") {
-                        adapter.deleteItem(id.toInt())
-                        adapter.notifyDataSetChanged()
+                        binding.txtPrice.text = it.cart_price
+                        map["count"] = it.count
+                        map["price"] = it.price
+                    } else {
+                        Toast.makeText(requireContext(), "خطا", Toast.LENGTH_SHORT).show()
                     }
-
                 }
 
             }
-        }
 
+        return map
     }
+
 
     override fun onClick(v: View?) {
         if (v!!.id == binding.btnGoNext.id) {

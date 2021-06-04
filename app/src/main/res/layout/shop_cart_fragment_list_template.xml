@@ -14,13 +14,12 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="182dp">
+        android:layout_height="180dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
             android:layout_width="100dp"
             android:layout_height="100dp"
-
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="8dp"
             android:layout_margin="8dp"
@@ -29,8 +28,8 @@
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/img_product_cart"
-                android:layout_width="102dp"
-                android:layout_height="112dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="@color/white"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/ic_launcher_round"></androidx.appcompat.widget.AppCompatImageButton>
@@ -93,11 +92,10 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-
                 >
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/img_mines_cart"
+                    android:id="@+id/img_minus_cart"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"

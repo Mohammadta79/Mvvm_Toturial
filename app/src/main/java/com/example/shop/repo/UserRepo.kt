@@ -16,9 +16,10 @@ class UserRepo @Inject constructor(val apiInterfaceResult: ApiInterfaceResult){
         mobile: String,
         nationalID: String,
         email: String,
-        phone: String
+        phone: String,
+        password:String
     ): Response<StringResponseModel>
-            = apiInterfaceResult.addInfo(id, name, mobile, nationalID, email, phone)
+            = apiInterfaceResult.addInfo(id, name, mobile, nationalID, email, phone,password)
 
 
     suspend fun getUserInfo(

@@ -98,7 +98,7 @@ class CompletePurchaseFragment : Fragment(), onShopCartItemCLickListener, View.O
         binding.btnPay.setOnClickListener(this)
     }
 
-    override fun onChangeCount(order: String, id: String) {
+    override fun onChangeCount(order: String, product_id: String):HashMap<String,String> {
         TODO("Not yet implemented")
     }
 

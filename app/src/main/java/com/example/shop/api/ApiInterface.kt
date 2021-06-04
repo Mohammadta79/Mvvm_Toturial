@@ -59,14 +59,15 @@ interface ApiInterface {
     ): Single<StringResponseModel>
 
     @FormUrlEncoded
-    @POST("addInfo.php")
+    @POST("addUserInfo.php")
     suspend fun AddInfo(
         @Field("id") id: String,
         @Field("name") name: String,
         @Field("mobile") mobile: String,
         @Field("nationalID") nationalID: String,
         @Field("email") email: String,
-        @Field("phone") phone: String
+        @Field("phone") phone: String,
+        @Field("password") password: String
     ): Response<StringResponseModel>
 
     @FormUrlEncoded
@@ -76,13 +77,13 @@ interface ApiInterface {
         @Field("fav_value") favValue: Int
     ): Response<String>
 
-    @FormUrlEncoded
-    @POST("manageShopCart.php")
+
+    @GET("manageShopCart.php")
     suspend fun manageShopCart(
-        @Field("product_id") product_id: String,
-        @Field("user_id") user_id: String,
-        @Field("order") order: String
-    ): Response<AddToCartResponseModel>
+        @Query("user_id") user_id: String,
+        @Query("product_id") product_id: String,
+        @Query("order") order: String
+    ): Response<ManageCartResponseModel>
 
     @FormUrlEncoded
     @POST("addToShopCart.php")
@@ -111,5 +112,10 @@ interface ApiInterface {
         @Field("user_id") user_id: String
     ): Response<String>
 
+    @FormUrlEncoded
+    @POST("getCartPrice.php")
+    suspend fun getCartPrice(
+        @Field("id") id:String
+    ):Response<CartPriceModel>
 
 }
